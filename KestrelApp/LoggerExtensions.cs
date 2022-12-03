@@ -1,4 +1,7 @@
-﻿namespace KestrelApp
+﻿using Microsoft.Extensions.Logging;
+using System;
+
+namespace KestrelApp
 {
     /// <summary>
     /// 日志插值字符串扩展

@@ -1,4 +1,6 @@
 using KestrelApp.HttpProxy;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
 namespace KestrelApp
@@ -9,7 +11,8 @@ namespace KestrelApp
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services
-                .AddHttproxy();
+                .AddHttproxy()
+                .AddFlowAnalyze();
 
             builder.Host.UseSerilog((hosting, logger) =>
             {

@@ -2,8 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable> 
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\KestrelApp.FlowAnalyze\KestrelApp.Transforms.csproj" />
 		<ProjectReference Include="..\KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj" />
 	</ItemGroup>
 </Project>
