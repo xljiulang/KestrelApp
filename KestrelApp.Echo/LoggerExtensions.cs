@@ -6,7 +6,7 @@ namespace KestrelApp
     /// <summary>
     /// 日志插值字符串扩展
     /// </summary>
-    public static class LoggerExtensions
+    static class LoggerExtensions
     {
         /// <summary>
         /// 输出日志

@@ -11,6 +11,7 @@ namespace KestrelApp
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services
+                .AddEcho()
                 .AddHttproxy()
                 .AddFlowAnalyze();
 
@@ -25,6 +26,7 @@ namespace KestrelApp
             {
                 var section = context.Configuration.GetSection("Kestrel");
                 kestrel.Configure(section)
+                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseEcho())
                     .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy());
             });
 

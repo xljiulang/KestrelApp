@@ -12,6 +12,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\KestrelApp.Client\KestrelApp.Client.csproj" />
+		<ProjectReference Include="..\KestrelApp.Echo\KestrelApp.Echo.csproj" />
 		<ProjectReference Include="..\KestrelApp.FlowAnalyze\KestrelApp.Transforms.csproj" />
 		<ProjectReference Include="..\KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj" />
 	</ItemGroup>
