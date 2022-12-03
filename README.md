@@ -34,3 +34,13 @@ Kestrel流量的变换，内容包括
 2. Stream委托
 3. Kestrel的Transport的替换
 4. 全局流量分析和流量加解密
+
+### 额外说明
+基于Kestrel的网络编程只是一种编程手段，网络编程最枯燥的部分在于具体的网络协议本身，您应该需要了解以下部分或全部协议，因为这些协议环环相扣，相互套娃。
+1. ipV4/ipV6
+2. tcp
+3. udp
+4. tls
+5. quic
+6. http
+7. websocket
