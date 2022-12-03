@@ -1,4 +1,5 @@
 ﻿using KestrelApp.Transforms.Analyzers;
+using KestrelApp.Transforms.Security;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,8 +23,8 @@ namespace KestrelApp
                 var oldTransport = context.Transport;
                 try
                 {
-                    await using var loggingDuplexPipe = new FlowAnalyzeDuplexPipe(context.Transport, flowAnalyzer);
-                    context.Transport = loggingDuplexPipe;
+                    await using var duplexPipe = new FlowAnalyzeDuplexPipe(context.Transport, flowAnalyzer);
+                    context.Transport = duplexPipe;
                     await next(context);
                 }
                 finally
@@ -33,5 +34,29 @@ namespace KestrelApp
             });
             return listen;
         }
+
+        /// <summary>
+        /// 使用Xor处理流量
+        /// </summary>
+        /// <param name="listen"></param>
+        /// <returns></returns>
+        public static ListenOptions UseFlowXor(this ListenOptions listen)
+        {
+            listen.Use(next => async context =>
+            {
+                var oldTransport = context.Transport;
+                try
+                {
+                    await using var duplexPipe = new XorDuplexPipe(context.Transport);
+                    context.Transport = duplexPipe;
+                    await next(context);
+                }
+                finally
+                {
+                    context.Transport = oldTransport;
+                }
+            });
+            return listen;
+        } 
     }
 }

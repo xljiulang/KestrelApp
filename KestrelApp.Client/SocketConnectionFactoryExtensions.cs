@@ -12,7 +12,7 @@ namespace KestrelApp
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSocketConnectionFactory(this IServiceCollection services)
+        public static IServiceCollection AddConnectionFactory(this IServiceCollection services)
         {
             const string typeName = "Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionFactory";
             var factoryType = typeof(SocketTransportOptions).Assembly.GetType(typeName);

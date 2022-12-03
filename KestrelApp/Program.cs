@@ -1,5 +1,7 @@
 using KestrelApp.HttpProxy;
+using KestrelApp.Transforms.SecurityProxy;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
@@ -11,9 +13,9 @@ namespace KestrelApp
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services
-                .AddEcho()
                 .AddHttproxy()
-                .AddFlowAnalyze();
+                .AddFlowAnalyze()
+                .AddConnectionFactory();
 
             builder.Host.UseSerilog((hosting, logger) =>
             {
@@ -26,12 +28,23 @@ namespace KestrelApp
             {
                 var section = context.Configuration.GetSection("Kestrel");
                 kestrel.Configure(section)
+                    // 普通echo服务器,使用telnet客户端就可以交互
                     .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseEcho())
+
+                    // xor(伪)加密传输的echo服务器, telnet客户端不能交互
+                    .Endpoint("XorEcho", endpoint => endpoint.ListenOptions.UseFlowXor().UseEcho())
+
+                    // xorEcho代理服务器，telnet连接到此服务器之后，它将流量xor之后代理到XorEcho服务器，它本身不参与echo协议处理
+                    .Endpoint("XorEchoProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseConnectionHandler<XorEchoTcpProxyHandler>())
+
+                    // http代理服务器，能处理隧道代理的场景
                     .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy());
             });
 
             var app = builder.Build();
             app.UseRouting();
+
+            // http代理中间件，能处理非隧道的http代理请求
             app.UseMiddleware<HttpProxyMiddleware>();
 
             app.Run();

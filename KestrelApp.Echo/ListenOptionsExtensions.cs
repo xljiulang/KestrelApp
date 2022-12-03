@@ -10,13 +10,12 @@ namespace KestrelApp
     public static class ListenOptionsExtensions
     {
         /// <summary>
-        /// 使用EchoHandler中间件
+        /// 使用EchoConnectionHandler
         /// </summary>
         /// <param name="listen"></param>
-        public static ListenOptions UseEcho(this ListenOptions listen)
+        public static void UseEcho(this ListenOptions listen)
         {
             listen.UseConnectionHandler<EchoConnectionHandler>();
-            return listen;
         }
     }
 }
