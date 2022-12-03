@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32912.340
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelApp", "KestrelApp\KestrelApp.csproj", "{149DD9E2-A874-48E5-8BF2-D65696D94129}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelApp.HttpProxy", "KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj", "{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4AB3436B-C476-4865-A4A5-36E908EF1B51}
+	EndGlobalSection
+EndGlobal
