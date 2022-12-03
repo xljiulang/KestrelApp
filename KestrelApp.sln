@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelApp.Client", "Kestre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelApp.Echo", "KestrelApp.Echo\KestrelApp.Echo.csproj", "{AB95994B-844B-4934-8160-B2869A5C987B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.TlsDetect", "KestrelApp.TlsDetect\KestrelApp.TlsDetect.csproj", "{9CCA4716-A884-4298-A09D-BA46AFB63223}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AB95994B-844B-4934-8160-B2869A5C987B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB95994B-844B-4934-8160-B2869A5C987B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB95994B-844B-4934-8160-B2869A5C987B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

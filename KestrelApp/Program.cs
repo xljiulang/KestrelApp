@@ -3,6 +3,8 @@ using KestrelApp.Transforms.SecurityProxy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Serilog;
 
 namespace KestrelApp
@@ -15,6 +17,7 @@ namespace KestrelApp
             builder.Services
                 .AddHttproxy()
                 .AddFlowAnalyze()
+                .AddTlsDetect()
                 .AddConnectionFactory();
 
             builder.Host.UseSerilog((hosting, logger) =>
@@ -38,7 +41,10 @@ namespace KestrelApp
                     .Endpoint("XorEchoProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseConnectionHandler<XorEchoTcpProxyHandler>())
 
                     // http代理服务器，能处理隧道代理的场景
-                    .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy());
+                    .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy())
+
+                    // http和https单端口双协议服务器
+                    .Endpoint("HttpHttps", endpoint => endpoint.ListenOptions.UseTlsDetect(option => { }));
             });
 
             var app = builder.Build();
@@ -47,6 +53,7 @@ namespace KestrelApp
             // http代理中间件，能处理非隧道的http代理请求
             app.UseMiddleware<HttpProxyMiddleware>();
 
+            app.Map("/{**any}", async context => await context.Response.WriteAsync(nameof(KestrelApp)));
             app.Run();
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Yarp.ReverseProxy.Forwarder;
 
@@ -35,9 +36,13 @@ namespace KestrelApp.HttpProxy
         public async Task InvokeAsync(HttpContext context)
         {
             var feature = context.Features.Get<IProxyFeature>();
-            if (feature == null || feature.ProxyProtocol != ProxyProtocol.HttpProxy)
+            if (feature == null)
             {
                 await next(context);
+            }
+            else if (feature.ProxyProtocol == ProxyProtocol.None)
+            {
+                await context.Response.WriteAsJsonAsync(new { Error = "请使用http代理协议来访问" });
             }
             else
             {
