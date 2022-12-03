@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Buffers;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace KestrelApp.Echo
 {
-    sealed class EchoConnectionHandler : ConnectionHandler
+    public class EchoConnectionHandler : ConnectionHandler
     {
         private static readonly byte[] delimiters = Encoding.ASCII.GetBytes("\r\n");
         private readonly ILogger<EchoConnectionHandler> logger;
@@ -20,6 +21,12 @@ namespace KestrelApp.Echo
 
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
+            var transferFormatFeature = connection.Features.Get<ITransferFormatFeature>();
+            if (transferFormatFeature != null)
+            {
+                transferFormatFeature.ActiveFormat = TransferFormat.Binary;
+            }
+
             var client = connection.RemoteEndPoint;
             while (connection.ConnectionClosed.IsCancellationRequested == false)
             {

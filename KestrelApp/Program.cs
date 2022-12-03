@@ -1,3 +1,4 @@
+using KestrelApp.Echo;
 using KestrelApp.HttpProxy;
 using KestrelApp.Transforms.SecurityProxy;
 using Microsoft.AspNetCore.Builder;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace KestrelApp
@@ -15,6 +17,7 @@ namespace KestrelApp
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services
+                .AddConnections()
                 .AddHttproxy()
                 .AddFlowAnalyze()
                 .AddTlsDetect()
@@ -52,6 +55,9 @@ namespace KestrelApp
 
             // http代理中间件，能处理非隧道的http代理请求
             app.UseMiddleware<HttpProxyMiddleware>();
+
+            // Echo over WebSocket
+            app.MapConnectionHandler<EchoConnectionHandler>("/echo");
 
             app.Map("/{**any}", async context => await context.Response.WriteAsync(nameof(KestrelApp)));
             app.Run();
