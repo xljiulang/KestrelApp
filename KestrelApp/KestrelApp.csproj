@@ -17,5 +17,6 @@
 		<ProjectReference Include="..\KestrelApp.FlowAnalyze\KestrelApp.Transforms.csproj" />
 		<ProjectReference Include="..\KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj" />
 		<ProjectReference Include="..\KestrelApp.TlsDetect\KestrelApp.TlsDetect.csproj" />
+		<ProjectReference Include="..\KestrelApp.Transforms\KestrelApp.Transforms.csproj" />
 	</ItemGroup>
 </Project>
