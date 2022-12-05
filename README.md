@@ -11,7 +11,7 @@
 让项目支持IConnectionFactory依赖注入，方便从Socket创建ConnectionContext对象
 
 #### 2 KestrelApp.Telnet
-Telnet协议的简单示例项目，与dotnetty的示例相同，内容包括
+Telnet协议的简单示例项目，内容包括
 1. 了解Kestrel的ConnectionHandler
 2. 了解PipeReader和PipeWriter
 
@@ -35,12 +35,5 @@ Kestrel流量的变换，内容包括
 3. Kestrel的Transport的替换
 4. 全局流量分析和流量加解密
 
-### 额外说明
-基于Kestrel的网络编程只是一种编程手段，网络编程最枯燥的部分在于具体的网络协议本身，您应该需要了解以下部分或全部协议，因为这些协议环环相扣，相互套娃。
-1. ipV4/ipV6
-2. tcp
-3. udp
-4. tls
-5. quic
-6. http
-7. websocket
+### 开源有你更精彩
+![打赏](reward.png)
