@@ -11,7 +11,7 @@
 让项目支持IConnectionFactory依赖注入，方便从Socket创建ConnectionContext对象
 
 #### 2 KestrelApp.Telnet
-Telnet协议的简单示例项目，内容包括
+Telnet协议的简单示例项目，与dotnetty的示例相同，内容包括
 1. 了解Kestrel的ConnectionHandler
 2. 了解PipeReader和PipeWriter
 

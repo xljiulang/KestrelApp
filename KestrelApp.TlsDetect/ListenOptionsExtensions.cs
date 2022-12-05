@@ -13,10 +13,21 @@ namespace KestrelApp
         /// 使用Tls侦测中间件
         /// 效果是同一个端口支持某协议的非tls和tls两种流量
         /// </summary>
+        /// <param name="listen"></param> 
+        /// <returns></returns>
+        public static ListenOptions UseTlsDetect(this ListenOptions listen)
+        {
+            return listen.UseTlsDetect(options => { });
+        }
+
+        /// <summary>
+        /// 使用Tls侦测中间件
+        /// 效果是同一个端口支持某协议的非tls和tls两种流量
+        /// </summary>
         /// <param name="listen"></param>
         /// <param name="configure">https配置</param>
         /// <returns></returns>
-        public static ListenOptions UseTlsDetect(this ListenOptions listen, Action< HttpsConnectionAdapterOptions> configure)
+        public static ListenOptions UseTlsDetect(this ListenOptions listen, Action<HttpsConnectionAdapterOptions> configure)
         {
             var invadeMiddleware = listen.ApplicationServices.GetRequiredService<TlsInvadeMiddleware>();
             var restoreMiddleware = listen.ApplicationServices.GetRequiredService<TlsRestoreMiddleware>();

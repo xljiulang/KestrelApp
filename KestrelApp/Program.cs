@@ -47,7 +47,10 @@ namespace KestrelApp
                     .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy())
 
                     // http和https单端口双协议服务器
-                    .Endpoint("HttpHttps", endpoint => endpoint.ListenOptions.UseTlsDetect(option => { }));
+                    .Endpoint("HttpHttps", endpoint => endpoint.ListenOptions.UseTlsDetect())
+
+                    // echo或echo over tls协议服务器
+                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseTlsDetect().UseEcho());
             });
 
             var app = builder.Build();
