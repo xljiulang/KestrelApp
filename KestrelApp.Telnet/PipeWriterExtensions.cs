@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -9,10 +10,18 @@ namespace KestrelApp.Telnet
 {
     static class PipeWriterExtensions
     {
-        public unsafe static ValueTask<FlushResult> WriteAsync(this PipeWriter writer, ReadOnlySpan<char> text, Encoding? encoding = null)
+        private static readonly byte[] crlf = Encoding.ASCII.GetBytes("\r\n");
+
+        public unsafe static ValueTask<FlushResult> WriteLineAsync(this PipeWriter writer, ReadOnlySpan<char> text, Encoding? encoding = null)
+        {
+            writer.WriteLine(text, encoding);
+            return writer.FlushAsync();
+        }
+
+        public unsafe static void WriteLine(this PipeWriter writer, ReadOnlySpan<char> text, Encoding? encoding = null)
         {
             writer.Write(text, encoding);
-            return writer.FlushAsync();
+            writer.Write(crlf);
         }
 
         public unsafe static int Write(this PipeWriter writer, ReadOnlySpan<char> text, Encoding? encoding = null)

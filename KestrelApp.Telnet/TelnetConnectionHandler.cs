@@ -13,7 +13,7 @@ namespace KestrelApp.Telnet
     /// </summary>
     public class TelnetConnectionHandler : ConnectionHandler
     {
-        private static readonly byte[] delimiters = Encoding.ASCII.GetBytes("\r\n");
+        private static readonly byte[] crlf = Encoding.ASCII.GetBytes("\r\n");
 
         /// <summary>
         /// 收到Telnet连接后
@@ -25,8 +25,8 @@ namespace KestrelApp.Telnet
             var input = connection.Transport.Input;
             var output = connection.Transport.Output;
 
-            output.Write($"Welcome to {Dns.GetHostName()} !\r\n");
-            output.Write($"It is {DateTime.Now} now !\r\n");
+            output.WriteLine($"Welcome to {Dns.GetHostName()} !");          
+            output.WriteLine($"It is {DateTime.Now} now !");          
             await output.FlushAsync(connection.ConnectionClosed);
 
             while (connection.ConnectionClosed.IsCancellationRequested == false)
@@ -49,23 +49,23 @@ namespace KestrelApp.Telnet
             var output = connection.Transport.Output;
             if (string.IsNullOrEmpty(message))
             {
-                await output.WriteAsync("Please type something.\r\n");
+                await output.WriteLineAsync("Please type something.");
             }
             else if (message.Equals("bye", StringComparison.OrdinalIgnoreCase))
             {
-                await output.WriteAsync("Have a good day!\r\n");
+                await output.WriteLineAsync("Have a good day!");
                 connection.Abort();
             }
             else
             {
-                await output.WriteAsync($"Did you say '{message}'?\r\n");
+                await output.WriteLineAsync($"Did you say '{message}'?");
             }
         }
 
         private static bool TryReadMessage(ReadResult result, out string message, out SequencePosition consumed)
         {
             var reader = new SequenceReader<byte>(result.Buffer);
-            if (reader.TryReadTo(out ReadOnlySpan<byte> span, delimiters))
+            if (reader.TryReadTo(out ReadOnlySpan<byte> span, crlf))
             {
                 message = Encoding.UTF8.GetString(span);
                 consumed = reader.Position;
