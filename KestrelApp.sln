@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.HttpProxy", "Kes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Client", "KestrelApp.Client\KestrelApp.Client.csproj", "{0B13A360-9364-488C-B059-A1935FEC5BF9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Echo", "KestrelApp.Echo\KestrelApp.Echo.csproj", "{AB95994B-844B-4934-8160-B2869A5C987B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.TlsDetect", "KestrelApp.TlsDetect\KestrelApp.TlsDetect.csproj", "{9CCA4716-A884-4298-A09D-BA46AFB63223}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Transforms", "KestrelApp.Transforms\KestrelApp.Transforms.csproj", "{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Telnet", "KestrelApp.Telnet\KestrelApp.Telnet.csproj", "{26E06087-9D8D-4204-9507-FF1A7C00FF39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,6 @@ Global
 		{0B13A360-9364-488C-B059-A1935FEC5BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B13A360-9364-488C-B059-A1935FEC5BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B13A360-9364-488C-B059-A1935FEC5BF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB95994B-844B-4934-8160-B2869A5C987B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB95994B-844B-4934-8160-B2869A5C987B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB95994B-844B-4934-8160-B2869A5C987B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB95994B-844B-4934-8160-B2869A5C987B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CCA4716-A884-4298-A09D-BA46AFB63223}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,10 +41,10 @@ Global
 		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33D6C7ED-470C-4C96-935A-EA613F39B1AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33D6C7ED-470C-4C96-935A-EA613F39B1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33D6C7ED-470C-4C96-935A-EA613F39B1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33D6C7ED-470C-4C96-935A-EA613F39B1AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

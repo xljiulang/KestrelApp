@@ -1,4 +1,4 @@
-﻿using KestrelApp.Echo;
+﻿using KestrelApp.Telnet;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
@@ -10,12 +10,12 @@ namespace KestrelApp
     public static class ListenOptionsExtensions
     {
         /// <summary>
-        /// 使用EchoConnectionHandler
+        /// 使用TelnetConnectionHandler
         /// </summary>
         /// <param name="listen"></param>
         public static void UseEcho(this ListenOptions listen)
         {
-            listen.UseConnectionHandler<EchoConnectionHandler>();
+            listen.UseConnectionHandler<TelnetConnectionHandler>();
         }
     }
 }

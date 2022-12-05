@@ -1,4 +1,4 @@
-using KestrelApp.Echo;
+using KestrelApp.Telnet;
 using KestrelApp.HttpProxy;
 using KestrelApp.Transforms.SecurityProxy;
 using Microsoft.AspNetCore.Builder;
@@ -34,14 +34,14 @@ namespace KestrelApp
             {
                 var section = context.Configuration.GetSection("Kestrel");
                 kestrel.Configure(section)
-                    // 普通echo服务器,使用telnet客户端就可以交互
-                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseEcho())
+                    // 普通Telnet服务器,使用telnet客户端就可以交互
+                    .Endpoint("Telnet", endpoint => endpoint.ListenOptions.UseEcho())
 
-                    // xor(伪)加密传输的echo服务器, telnet客户端不能交互
-                    .Endpoint("XorEcho", endpoint => endpoint.ListenOptions.UseFlowXor().UseEcho())
+                    // xor(伪)加密传输的Telnet服务器, telnet客户端不能交互
+                    .Endpoint("XorTelnet", endpoint => endpoint.ListenOptions.UseFlowXor().UseEcho())
 
-                    // xorEcho代理服务器，telnet连接到此服务器之后，它将流量xor之后代理到XorEcho服务器，它本身不参与echo协议处理
-                    .Endpoint("XorEchoProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseConnectionHandler<XorEchoTcpProxyHandler>())
+                    // XorTelnet代理服务器，telnet连接到此服务器之后，它将流量xor之后代理到XorTelnet服务器，它本身不参与Telnet协议处理
+                    .Endpoint("XorTelnetProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseConnectionHandler<XorTelnetProxyHandler>())
 
                     // http代理服务器，能处理隧道代理的场景
                     .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy())
@@ -56,8 +56,8 @@ namespace KestrelApp
             // http代理中间件，能处理非隧道的http代理请求
             app.UseMiddleware<HttpProxyMiddleware>();
 
-            // Echo over WebSocket
-            app.MapConnectionHandler<EchoConnectionHandler>("/echo");
+            // Telnet over WebSocket
+            app.MapConnectionHandler<TelnetConnectionHandler>("/telnet");
 
             app.Map("/{**any}", async context => await context.Response.WriteAsync(nameof(KestrelApp)));
             app.Run();
