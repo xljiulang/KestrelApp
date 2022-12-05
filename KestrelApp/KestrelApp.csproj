@@ -19,4 +19,10 @@
 		<ProjectReference Include="..\KestrelApp.TlsDetect\KestrelApp.TlsDetect.csproj" />
 		<ProjectReference Include="..\KestrelApp.Transforms\KestrelApp.Transforms.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="telnet-websocket.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

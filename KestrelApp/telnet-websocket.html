@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://127.0.0.1:5005/telnet");
+
+        ws.onopen = function () {
+            setInterval(function () {
+                ws.send("telnet over websocket! ");
+                ws.send(new Date().toLocaleString() + "\r\n");
+            }, 1000);
+        };
+
+        ws.onmessage = function (e) {
+            console.log(e.data);
+            var p = document.createElement("p");
+            p.innerHTML = e.data;
+            document.body.appendChild(p);
+        };
+    </script>
+</body>
+</html>
