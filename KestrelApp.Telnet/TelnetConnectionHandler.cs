@@ -32,15 +32,14 @@ namespace KestrelApp.Telnet
             while (connection.ConnectionClosed.IsCancellationRequested == false)
             {
                 var result = await input.ReadAsync();
-                if (TryReadMessage(result, out var message, out var position))
+                if (TryReadMessage(result, out var message, out var consumed))
                 {
                     await ProcessMessageAsync(message, connection);
-                    input.AdvanceTo(position);
+                    input.AdvanceTo(consumed);
                 }
                 else
                 {
-                    var consumed = result.Buffer.Start;
-                    input.AdvanceTo(consumed, position);
+                    input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
                 }
             }
         }
@@ -63,19 +62,19 @@ namespace KestrelApp.Telnet
             }
         }
 
-        private static bool TryReadMessage(ReadResult result, out string message, out SequencePosition position)
+        private static bool TryReadMessage(ReadResult result, out string message, out SequencePosition consumed)
         {
             var reader = new SequenceReader<byte>(result.Buffer);
             if (reader.TryReadTo(out ReadOnlySpan<byte> span, delimiters))
             {
                 message = Encoding.UTF8.GetString(span);
-                position = reader.Position;
+                consumed = reader.Position;
                 return true;
             }
             else
             {
                 message = string.Empty;
-                position = result.Buffer.GetPosition(reader.Length);
+                consumed = result.Buffer.Start;
                 return false;
             }
         }
