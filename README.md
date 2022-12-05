@@ -6,6 +6,9 @@
 2. 了解网络编程不再需要第三方框架(包括Dotnetty)
 3. 了解`telnet` over `websocket` over `tls` over `xxx私有加密` over `tcp`的套娃网络编程
 
+### 更多文档
+[docs](docs)
+
 ### 项目介绍
 #### 1 KestrelApp.Client
 让项目支持IConnectionFactory依赖注入，方便从Socket创建ConnectionContext对象
