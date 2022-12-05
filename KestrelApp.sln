@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.TlsDetect", "Kes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Transforms", "KestrelApp.Transforms\KestrelApp.Transforms.csproj", "{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelApp.Redis", "KestrelApp.Redis\KestrelApp.Redis.csproj", "{33D6C7ED-470C-4C96-935A-EA613F39B1AB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
