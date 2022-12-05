@@ -35,10 +35,10 @@ namespace KestrelApp
                 var section = context.Configuration.GetSection("Kestrel");
                 kestrel.Configure(section)
                     // 普通Telnet服务器,使用telnet客户端就可以交互
-                    .Endpoint("Telnet", endpoint => endpoint.ListenOptions.UseEcho())
+                    .Endpoint("Telnet", endpoint => endpoint.ListenOptions.UseTelnet())
 
                     // xor(伪)加密传输的Telnet服务器, telnet客户端不能交互
-                    .Endpoint("XorTelnet", endpoint => endpoint.ListenOptions.UseFlowXor().UseEcho())
+                    .Endpoint("XorTelnet", endpoint => endpoint.ListenOptions.UseFlowXor().UseTelnet())
 
                     // XorTelnet代理服务器，telnet连接到此服务器之后，它将流量xor之后代理到XorTelnet服务器，它本身不参与Telnet协议处理
                     .Endpoint("XorTelnetProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseConnectionHandler<XorTelnetProxyHandler>())

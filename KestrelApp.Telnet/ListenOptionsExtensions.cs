@@ -13,7 +13,7 @@ namespace KestrelApp
         /// 使用TelnetConnectionHandler
         /// </summary>
         /// <param name="listen"></param>
-        public static void UseEcho(this ListenOptions listen)
+        public static void UseTelnet(this ListenOptions listen)
         {
             listen.UseConnectionHandler<TelnetConnectionHandler>();
         }
