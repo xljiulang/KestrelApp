@@ -38,68 +38,93 @@ namespace KestrelApp.HttpProxy
         /// <returns></returns>
         public async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
         {
-            var result = await context.Transport.Input.ReadAsync();
-            var httpRequest = this.GetHttpRequestHandler(result, out var consumed);
+            var input = context.Transport.Input;
+            var output = context.Transport.Output;
+            var request = new HttpRequestHandler();
 
-            // 协议错误
-            if (consumed == 0L)
+            while (context.ConnectionClosed.IsCancellationRequested == false)
             {
-                await context.Transport.Output.WriteAsync(this.http400, context.ConnectionClosed);
-            }
-            else
-            {
-                context.Features.Set<IProxyFeature>(httpRequest);
-                if (httpRequest.ProxyProtocol == ProxyProtocol.TunnelProxy)
+                var result = await input.ReadAsync();
+                if (result.IsCanceled)
                 {
-                    var position = result.Buffer.GetPosition(consumed);
-                    context.Transport.Input.AdvanceTo(position);
+                    break;
+                }
 
-                    try
+                try
+                {
+                    if (this.ParseRequest(result, request, out var consumed))
                     {
-                        using var handler = new TunnelProxyHandler(httpRequest);
-                        await handler.ConnectAsync(context.ConnectionClosed);
-                        await context.Transport.Output.WriteAsync(this.http200, context.ConnectionClosed);
-
-                        this.logger.LogInformation($"隧道代理{httpRequest.ProxyHost}开始");
-                        await handler.HandleAsync(context);
-                        this.logger.LogInformation($"隧道代理{httpRequest.ProxyHost}结束");
+                        context.Features.Set<IProxyFeature>(request);
+                        if (request.ProxyProtocol == ProxyProtocol.TunnelProxy)
+                        {
+                            input.AdvanceTo(consumed);
+                            await this.ProcessTunnelAsync(context, request);
+                        }
+                        else
+                        {
+                            input.AdvanceTo(result.Buffer.Start);
+                            await next(context);
+                        }
+                        break;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        this.logger.LogError(ex, $"无法代理{httpRequest.ProxyHost}");
+                        input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
+                    }
+
+                    if (result.IsCompleted)
+                    {
+                        break;
                     }
                 }
-                else // 非隧道代理，在Application层使用HttpProxyMiddleware来处理
+                catch (Exception)
                 {
-                    var position = result.Buffer.Start;
-                    context.Transport.Input.AdvanceTo(position);
-                    await next(context);
+                    await output.WriteAsync(this.http400, context.ConnectionClosed);
+                    break;
                 }
             }
         }
 
 
+        private async ValueTask ProcessTunnelAsync(ConnectionContext context, HttpRequestHandler request)
+        {
+            try
+            {
+                using var tunnel = new TunnelProxyConnection(request);
+                await tunnel.ConnectAsync(context.ConnectionClosed);
+                await context.Transport.Output.WriteAsync(this.http200, context.ConnectionClosed);
+
+                this.logger.LogInformation($"隧道代理{request.ProxyHost}开始");
+                await tunnel.TransportAsync(context);
+                this.logger.LogInformation($"隧道代理{request.ProxyHost}结束");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, $"无法代理{request.ProxyHost}");
+            }
+        }
+
         /// <summary>
-        /// 获取http请求处理者
+        /// 解析http请求
         /// </summary>
         /// <param name="result"></param>
+        /// <param name="requestHandler"></param>
         /// <param name="consumed"></param>
         /// <returns></returns>
-        private HttpRequestHandler GetHttpRequestHandler(ReadResult result, out long consumed)
+        private bool ParseRequest(ReadResult result, HttpRequestHandler request, out SequencePosition consumed)
         {
-            var handler = new HttpRequestHandler();
             var reader = new SequenceReader<byte>(result.Buffer);
-
-            if (this.httpParser.ParseRequestLine(handler, ref reader) &&
-                this.httpParser.ParseHeaders(handler, ref reader))
+            if (this.httpParser.ParseRequestLine(request, ref reader) &&
+                this.httpParser.ParseHeaders(request, ref reader))
             {
-                consumed = reader.Consumed;
+                consumed = reader.Position;
+                return true;
             }
             else
             {
-                consumed = 0L;
+                consumed = default;
+                return false;
             }
-            return handler;
         }
 
 
