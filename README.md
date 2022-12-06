@@ -7,7 +7,12 @@
 3. 了解`telnet` over `websocket` over `tls` over `xxx私有加密` over `tcp`的套娃网络编程
 
 ### 更多文档
+#### 内部文档库
 [docs](docs)
+
+#### 外部文档
+* [Pipelines](https://learn.microsoft.com/zh-cn/dotnet/standard/io/pipelines)
+* [Buffers](https://learn.microsoft.com/zh-cn/dotnet/standard/io/buffers)
 
 ### 项目介绍
 #### 1 KestrelApp.Client
