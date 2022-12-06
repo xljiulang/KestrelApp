@@ -38,6 +38,11 @@ namespace KestrelApp.Echo
             while (connection.ConnectionClosed.IsCancellationRequested == false)
             {
                 var result = await input.ReadAsync();
+                if (result.IsCanceled)
+                {
+                    break;
+                }
+
                 if (TryReadEcho(result, out var echo, out var consumed))
                 {
                     using (echo)
@@ -55,6 +60,11 @@ namespace KestrelApp.Echo
                 else
                 {
                     input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
+                }
+
+                if (result.IsCompleted)
+                {
+                    break;
                 }
             }
         }

@@ -25,13 +25,18 @@ namespace KestrelApp.Telnet
             var input = connection.Transport.Input;
             var output = connection.Transport.Output;
 
-            output.WriteLine($"Welcome to {Dns.GetHostName()} !");          
-            output.WriteLine($"It is {DateTime.Now} now !");          
+            output.WriteLine($"Welcome to {Dns.GetHostName()} !");
+            output.WriteLine($"It is {DateTime.Now} now !");
             await output.FlushAsync(connection.ConnectionClosed);
 
             while (connection.ConnectionClosed.IsCancellationRequested == false)
             {
                 var result = await input.ReadAsync();
+                if (result.IsCanceled)
+                {
+                    break;
+                }
+
                 if (TryReadMessage(result, out var message, out var consumed))
                 {
                     await ProcessMessageAsync(message, connection);
@@ -40,6 +45,11 @@ namespace KestrelApp.Telnet
                 else
                 {
                     input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
+                }
+
+                if (result.IsCompleted)
+                {
+                    break;
                 }
             }
         }
