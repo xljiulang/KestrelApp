@@ -30,7 +30,7 @@ KestrelApp的中间件类库
 #### 5.1 Echo
 简单Echo应用协议的示例
 
-#### 5.2 FlowAnalyzers
+#### 5.2 FlowAnalyze
 传输层流量统计中间件示例
 
 #### 5.3 FlowXor
