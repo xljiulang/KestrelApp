@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace KestrelApp.HttpProxy
 {
     /// <summary>
-    /// 隧道代理处理者
+    /// 隧道代理连接
     /// </summary>
-    sealed class TunnelProxyHandler : IDisposable
+    sealed class TunnelProxyConnection : IDisposable
     {
         private readonly IProxyFeature feature;
         private readonly Socket socket;
 
-        public TunnelProxyHandler(IProxyFeature feature)
+        public TunnelProxyConnection(IProxyFeature feature)
         {
             this.feature = feature;
             this.socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
@@ -46,7 +46,7 @@ namespace KestrelApp.HttpProxy
         /// <param name="next"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task HandleAsync(ConnectionContext context)
+        public async Task TransportAsync(ConnectionContext context)
         {
             var transport = context.Features.Get<IConnectionTransportFeature>()?.Transport;
             if (transport == null)
