@@ -11,8 +11,14 @@ namespace System.IO.Pipelines
         private bool disposed;
         private readonly object syncRoot = new();
 
+        /// <summary>
+        /// 输入对象
+        /// </summary>
         public PipeReader Input { get; }
 
+        /// <summary>
+        /// 输出对象
+        /// </summary>
         public PipeWriter Output { get; }
 
         /// <summary>
@@ -40,6 +46,10 @@ namespace System.IO.Pipelines
             this.Output = PipeWriter.Create(delegatingStream, writerOptions);
         }
 
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        /// <returns></returns>
         public virtual async ValueTask DisposeAsync()
         {
             lock (this.syncRoot)

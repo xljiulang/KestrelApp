@@ -4,11 +4,14 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<AssemblyName>Kestrel网络编程框架</AssemblyName>
+		<Summary>Kestrel网络编程框架</Summary>
+		<Description>Kestrel网络编程框架</Description>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup> 
+	</ItemGroup>
 
 </Project>

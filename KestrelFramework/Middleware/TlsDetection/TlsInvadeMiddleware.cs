@@ -14,6 +14,7 @@ namespace KestrelFramework.Middleware.TlsDetection
         /// <summary>
         /// 执行中间件
         /// </summary>
+        /// <param name="next"></param>
         /// <param name="context"></param>
         /// <returns></returns>
         public static async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)

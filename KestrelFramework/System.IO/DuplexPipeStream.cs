@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.IO;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -30,76 +29,95 @@ namespace System.IO
             this.throwOnCancelled = throwOnCancelled;
         }
 
+        /// <summary>
+        /// 取消挂起的读取操作
+        /// </summary>
         public void CancelPendingRead()
         {
             cancelCalled = true;
             input.CancelPendingRead();
         }
 
+        /// <inheritdoc/>
         public override bool CanRead => true;
 
+        /// <inheritdoc/>
         public override bool CanSeek => false;
 
+        /// <inheritdoc/>
         public override bool CanWrite => true;
 
+        /// <inheritdoc/>
         public override long Length => throw new NotSupportedException();
 
+        /// <inheritdoc/>
         public override long Position
         {
             get => throw new NotSupportedException();
             set => throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         public override void SetLength(long value)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count)
         {
             var task = ReadAsyncInternal(new Memory<byte>(buffer, offset, count), default);
             return task.IsCompleted ? task.Result : task.AsTask().GetAwaiter().GetResult();
         }
 
+        /// <inheritdoc/>
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
             return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), cancellationToken).AsTask();
         }
 
+        /// <inheritdoc/>
         public override ValueTask<int> ReadAsync(Memory<byte> destination, CancellationToken cancellationToken = default)
         {
             return ReadAsyncInternal(destination, cancellationToken);
         }
 
+        /// <inheritdoc/>
         public override void Write(byte[] buffer, int offset, int count)
         {
             WriteAsync(buffer, offset, count).GetAwaiter().GetResult();
         }
 
+        /// <inheritdoc/>
         public override async Task WriteAsync(byte[]? buffer, int offset, int count, CancellationToken cancellationToken)
         {
             await output.WriteAsync(buffer.AsMemory(offset, count), cancellationToken);
         }
 
+        /// <inheritdoc/>
         public override async ValueTask WriteAsync(ReadOnlyMemory<byte> source, CancellationToken cancellationToken = default)
         {
             await output.WriteAsync(source, cancellationToken);
         }
 
+        /// <inheritdoc/>
         public override void Flush()
         {
             FlushAsync(CancellationToken.None).GetAwaiter().GetResult();
         }
 
+        /// <inheritdoc/>
         public override async Task FlushAsync(CancellationToken cancellationToken)
         {
             await output.FlushAsync(cancellationToken);
         }
+
 
         [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
         private async ValueTask<int> ReadAsyncInternal(Memory<byte> destination, CancellationToken cancellationToken)
@@ -138,21 +156,25 @@ namespace System.IO
             }
         }
 
+        /// <inheritdoc/>
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
         {
             return TaskToApm.Begin(ReadAsync(buffer, offset, count), callback, state);
         }
 
+        /// <inheritdoc/>
         public override int EndRead(IAsyncResult asyncResult)
         {
             return TaskToApm.End<int>(asyncResult);
         }
 
+        /// <inheritdoc/>
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
         {
             return TaskToApm.Begin(WriteAsync(buffer, offset, count), callback, state);
         }
 
+        /// <inheritdoc/>
         public override void EndWrite(IAsyncResult asyncResult)
         {
             TaskToApm.End(asyncResult);

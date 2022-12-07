@@ -33,7 +33,7 @@ namespace System.Buffers
         /// 获取已数入的数据
         /// </summary>
         /// <returns></returns>
-        public ArraySegment<T> WrittenSegment => new ArraySegment<T>(this.buffer, 0, this.index);
+        public ArraySegment<T> WrittenSegment => new(this.buffer, 0, this.index);
 
         /// <summary>
         /// 获取容量
@@ -176,6 +176,9 @@ namespace System.Buffers
             this.disposed = true;
         }
 
+        /// <summary>
+        /// 析构函数
+        /// </summary>
         ~ArrayPoolBufferWriter()
         {
             this.Dispose();
