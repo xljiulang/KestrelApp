@@ -20,10 +20,7 @@ namespace System.Buffers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteCR(this IBufferWriter<byte> writer)
         {
-            const int size = 1;
-            var span = writer.GetSpan(size);
-            span[0] = CR;
-            writer.Advance(size);
+            writer.Write(CR);
         }
 
         /// <summary>
@@ -33,10 +30,7 @@ namespace System.Buffers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteLF(this IBufferWriter<byte> writer)
         {
-            const int size = 1;
-            var span = writer.GetSpan(size);
-            span[0] = LF;
-            writer.Advance(size);
+            writer.Write(LF);
         }
 
         /// <summary>
@@ -50,6 +44,20 @@ namespace System.Buffers
             var span = writer.GetSpan(size);
             span[0] = CR;
             span[1] = LF;
+            writer.Advance(size);
+        }
+
+        /// <summary>
+        /// 写入字节
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write(this IBufferWriter<byte> writer, byte value)
+        {
+            const int size = 1;
+            var span = writer.GetSpan(size);
+            span[0] = value;
             writer.Advance(size);
         }
 

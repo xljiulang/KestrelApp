@@ -17,6 +17,7 @@ namespace KestrelApp
                 .AddConnections()
                 .AddHttproxy()
                 .AddFlowAnalyze()
+                .AddRedis()
                 .AddSocketConnectionFactory();
 
             builder.Host.UseSerilog((hosting, logger) =>
@@ -46,7 +47,10 @@ namespace KestrelApp
                     .Endpoint("HttpHttps", endpoint => endpoint.ListenOptions.UseTlsDetection())
 
                     // echo或echo over tls协议服务器
-                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseTlsDetection().UseEcho());
+                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseTlsDetection().UseEcho())
+
+                    // redis协议服务器
+                    .Endpoint("Redis", endpoint => endpoint.ListenOptions.UseRedis());
             });
 
             var app = builder.Build();
