@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 
-namespace KestrelApp.Middleware.FlowAnalyzers
+namespace KestrelApp.Middleware.FlowAnalyze
 {
     sealed class FlowAnalyzer : IFlowAnalyzer
     {

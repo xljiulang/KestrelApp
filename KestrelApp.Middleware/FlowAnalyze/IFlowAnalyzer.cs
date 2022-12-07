@@ -1,4 +1,4 @@
-﻿namespace KestrelApp.Middleware.FlowAnalyzers
+﻿namespace KestrelApp.Middleware.FlowAnalyze
 {
     /// <summary>
     /// 流量分析器

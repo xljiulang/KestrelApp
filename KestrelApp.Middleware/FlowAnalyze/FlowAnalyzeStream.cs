@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace KestrelApp.Middleware.FlowAnalyzers
+namespace KestrelApp.Middleware.FlowAnalyze
 {
     sealed class FlowAnalyzeStream : DelegatingStream
     {

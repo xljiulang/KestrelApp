@@ -1,6 +1,6 @@
 ﻿using System.IO.Pipelines;
 
-namespace KestrelApp.Middleware.FlowAnalyzers
+namespace KestrelApp.Middleware.FlowAnalyze
 {
     sealed class FlowAnalyzeDuplexPipe : DelegatingDuplexPipe<FlowAnalyzeStream>
     {

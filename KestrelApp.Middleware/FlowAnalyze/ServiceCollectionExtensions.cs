@@ -1,4 +1,4 @@
-﻿using KestrelApp.Middleware.FlowAnalyzers;
+﻿using KestrelApp.Middleware.FlowAnalyze;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
