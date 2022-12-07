@@ -5,15 +5,9 @@ VisualStudioVersion = 17.4.32912.340
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp", "KestrelApp\KestrelApp.csproj", "{149DD9E2-A874-48E5-8BF2-D65696D94129}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.HttpProxy", "KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj", "{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Transforms", "KestrelApp.Transforms\KestrelApp.Transforms.csproj", "{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Telnet", "KestrelApp.Telnet\KestrelApp.Telnet.csproj", "{26E06087-9D8D-4204-9507-FF1A7C00FF39}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelApp.Echo", "KestrelApp.Echo\KestrelApp.Echo.csproj", "{4505CD0E-0C4A-4061-9EC9-56B38AA633DC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelFramework", "KestrelFramework\KestrelFramework.csproj", "{CD26B6A1-7175-42E0-8E6E-9C4FE57873F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KestrelApp.Middleware", "KestrelApp.Middleware\KestrelApp.Middleware.csproj", "{C74C24DD-6F3E-4675-B818-2199751F6289}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,26 +19,14 @@ Global
 		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{149DD9E2-A874-48E5-8BF2-D65696D94129}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C23B5F99-4133-4E79-BAF3-7F17CAFBFCE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BA73CF3-DDF5-4F49-8A63-8DBBFC4927C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26E06087-9D8D-4204-9507-FF1A7C00FF39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4505CD0E-0C4A-4061-9EC9-56B38AA633DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4505CD0E-0C4A-4061-9EC9-56B38AA633DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4505CD0E-0C4A-4061-9EC9-56B38AA633DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4505CD0E-0C4A-4061-9EC9-56B38AA633DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CD26B6A1-7175-42E0-8E6E-9C4FE57873F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CD26B6A1-7175-42E0-8E6E-9C4FE57873F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD26B6A1-7175-42E0-8E6E-9C4FE57873F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD26B6A1-7175-42E0-8E6E-9C4FE57873F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C74C24DD-6F3E-4675-B818-2199751F6289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C74C24DD-6F3E-4675-B818-2199751F6289}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C74C24DD-6F3E-4675-B818-2199751F6289}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C74C24DD-6F3E-4675-B818-2199751F6289}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

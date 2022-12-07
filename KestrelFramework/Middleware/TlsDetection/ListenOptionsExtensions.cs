@@ -8,7 +8,7 @@ namespace Microsoft.AspNetCore.Hosting
     /// <summary>
     /// ListenOptions扩展
     /// </summary>
-    public static class ListenOptionsExtensions
+    public static partial class ListenOptionsExtensions
     {
         /// <summary>
         /// 使用Tls侦测中间件

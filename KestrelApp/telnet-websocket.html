@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-    <script type="text/javascript">
+    <script id="js" type="text/javascript">
         var ws = new WebSocket("ws://127.0.0.1:5005/telnet");
 
         ws.onopen = function () {
@@ -21,6 +21,12 @@
             p.innerHTML = e.data;
             document.body.appendChild(p);
         };
+    </script>
+
+    <script type="text/javascript">
+        var pre = document.createElement("pre");
+        pre.innerHTML = document.getElementById("js").innerHTML;
+        document.body.appendChild(pre);
     </script>
 </body>
 </html>

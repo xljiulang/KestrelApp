@@ -1,8 +1,6 @@
-using KestrelApp.HttpProxy;
-using KestrelApp.Telnet;
-using KestrelApp.Transforms.SecurityProxy;
+using KestrelApp.Middleware.HttpProxy;
+using KestrelApp.Middleware.Telnet;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +37,7 @@ namespace KestrelApp
                     .Endpoint("XorTelnet", endpoint => endpoint.ListenOptions.UseFlowXor().UseTelnet())
 
                     // XorTelnet代理服务器，telnet连接到此服务器之后，它将流量xor之后代理到XorTelnet服务器，它本身不参与Telnet协议处理
-                    .Endpoint("XorTelnetProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseConnectionHandler<XorTelnetProxyHandler>())
+                    .Endpoint("XorTelnetProxy", endpoint => endpoint.ListenOptions.UseFlowXor().UseXorTelnetProxy())
 
                     // http代理服务器，能处理隧道代理的场景
                     .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy())
@@ -60,7 +58,12 @@ namespace KestrelApp
             // Telnet over WebSocket
             app.MapConnectionHandler<TelnetConnectionHandler>("/telnet");
 
-            app.Map("/{**any}", async context => await context.Response.WriteAsync(nameof(KestrelApp)));
+            app.Map("/", async context =>
+            {
+                context.Response.ContentType = "text/html";
+                await context.Response.SendFileAsync("telnet-websocket.html");
+            });
+
             app.Run();
         }
     }

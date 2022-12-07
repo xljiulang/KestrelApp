@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// ServiceCollection扩展
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public static partial class ServiceCollectionExtensions
     {
         /// <summary>
         /// 注册SocketConnectionFactory为IConnectionFactory

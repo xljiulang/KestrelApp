@@ -2,25 +2,22 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable> 
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" /> 
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\KestrelApp.Echo\KestrelApp.Echo.csproj" />
-		<ProjectReference Include="..\KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj" />
-		<ProjectReference Include="..\KestrelApp.Telnet\KestrelApp.Telnet.csproj" />
-		<ProjectReference Include="..\KestrelApp.Transforms\KestrelApp.Transforms.csproj" />
+	  <ProjectReference Include="..\KestrelApp.Middleware\KestrelApp.Middleware.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="telnet-websocket.html">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="telnet-websocket.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>
