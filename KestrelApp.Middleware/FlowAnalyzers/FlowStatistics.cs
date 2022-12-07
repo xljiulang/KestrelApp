@@ -8,21 +8,21 @@
         /// <summary>
         /// 获取总读上行
         /// </summary>
-        public long TotalRead { get; set; }
+        public long TotalRead { get; init; }
 
         /// <summary>
         /// 获取总下行
         /// </summary>
-        public long TotalWrite { get; set; }
+        public long TotalWrite { get; init; }
 
         /// <summary>
         /// 获取读取速率
         /// </summary>
-        public double ReadRate { get; set; }
+        public double ReadRate { get; init; }
 
         /// <summary>
         /// 获取写入速率
         /// </summary>
-        public double WriteRate { get; set; }
+        public double WriteRate { get; init; }
     }
 }

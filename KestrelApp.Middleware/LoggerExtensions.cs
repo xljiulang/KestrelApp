@@ -71,6 +71,7 @@ namespace KestrelApp
         /// 输出日志
         /// </summary>
         /// <param name="logger"></param>
+        /// <param name="error"></param>
         /// <param name="formattableString"></param>
         public static void LogError(this ILogger logger, Exception error, FormattableString formattableString)
             => logger.Log(LogLevel.Error, error, formattableString);

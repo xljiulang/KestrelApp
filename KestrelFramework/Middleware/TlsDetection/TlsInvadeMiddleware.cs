@@ -9,7 +9,7 @@ namespace KestrelFramework.Middleware.TlsDetection
     /// <summary>
     /// tls入侵中间件
     /// </summary>
-    static class TlsInvadeMiddleware
+    sealed class TlsInvadeMiddleware : IKestrelMiddleware
     {
         /// <summary>
         /// 执行中间件
@@ -17,7 +17,7 @@ namespace KestrelFramework.Middleware.TlsDetection
         /// <param name="next"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
+        public async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
         {
             // 连接不是tls
             if (await IsTlsConnectionAsync(context) == false)

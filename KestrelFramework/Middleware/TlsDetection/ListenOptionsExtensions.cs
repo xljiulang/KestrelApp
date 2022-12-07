@@ -1,4 +1,5 @@
 ﻿using KestrelFramework.Middleware.TlsDetection;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System;
@@ -30,9 +31,9 @@ namespace Microsoft.AspNetCore.Hosting
         /// <returns></returns>
         public static ListenOptions UseTlsDetection(this ListenOptions listen, Action<HttpsConnectionAdapterOptions> configure)
         {
-            listen.Use(next => context => TlsInvadeMiddleware.InvokeAsync(next, context));
+            listen.Use<TlsInvadeMiddleware>();
             listen.UseHttps(configure);
-            listen.Use(next => context => TlsRestoreMiddleware.InvokeAsync(next, context));
+            listen.Use<TlsRestoreMiddleware>();
             return listen;
         }
     }

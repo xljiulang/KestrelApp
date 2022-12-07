@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using System;
 
-namespace KestrelFramework.Microsoft.AspNetCore.Connections
+namespace Microsoft.AspNetCore.Connections
 {
     static class ConnectionFactoryTypeUtil
     {

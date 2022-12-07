@@ -17,6 +17,12 @@ namespace KestrelApp.Middleware.HttpProxy
         private readonly ILogger<HttpProxyMiddleware> logger;
         private readonly HttpMessageInvoker httpClient = new(CreateSocketsHttpHandler());
 
+        /// <summary>
+        /// 普通http代理(非隧道代理)中间件
+        /// </summary>
+        /// <param name="next"></param>
+        /// <param name="httpForwarder"></param>
+        /// <param name="logger"></param>
         public HttpProxyMiddleware(
             RequestDelegate next,
             IHttpForwarder httpForwarder,

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Connections;
+﻿using KestrelFramework;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Buffers;
 using System.IO.Pipelines;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,21 +14,21 @@ namespace KestrelApp.Middleware.HttpProxy
     /// <summary>
     /// 代理中间件
     /// </summary>
-    sealed class ProxyMiddleware
+    sealed class ProxyMiddleware : IKestrelMiddleware
     {
-        private readonly HttpParser<HttpRequestHandler> httpParser = new();
-        private readonly byte[] http200 = Encoding.ASCII.GetBytes("HTTP/1.1 200 Connection Established\r\n\r\n");
-        private readonly byte[] http400 = Encoding.ASCII.GetBytes("HTTP/1.1 400 Bad Request\r\n\r\n");
+        private static readonly byte[] http400 = Encoding.ASCII.GetBytes("HTTP/1.1 400 Bad Request\r\n\r\n");
+        private static readonly byte[] http407 = Encoding.ASCII.GetBytes("HTTP/1.1 407 Proxy Authentication Required\r\n\r\n");
 
-        private readonly ILogger<ProxyMiddleware> logger;
+        private readonly HttpParser<HttpRequestHandler> httpParser = new();
+        private readonly IHttpProxyAuthenticationHandler authenticationHandler;
 
         /// <summary>
         /// 代理中间件
         /// </summary>
-        /// <param name="logger"></param>
-        public ProxyMiddleware(ILogger<ProxyMiddleware> logger)
+        /// <param name="authenticationHandler"></param>
+        public ProxyMiddleware(IHttpProxyAuthenticationHandler authenticationHandler)
         {
-            this.logger = logger;
+            this.authenticationHandler = authenticationHandler;
         }
 
         /// <summary>
@@ -54,17 +55,26 @@ namespace KestrelApp.Middleware.HttpProxy
                 {
                     if (this.ParseRequest(result, request, out var consumed))
                     {
-                        context.Features.Set<IProxyFeature>(request);
                         if (request.ProxyProtocol == ProxyProtocol.TunnelProxy)
                         {
                             input.AdvanceTo(consumed);
-                            await this.ProcessTunnelAsync(context, request);
                         }
                         else
                         {
                             input.AdvanceTo(result.Buffer.Start);
+                        }
+
+                        // 身份认证
+                        if (await this.authenticationHandler.AuthenticateAsync(request.ProxyAuthorization))
+                        {
+                            context.Features.Set<IProxyFeature>(request);
                             await next(context);
                         }
+                        else
+                        {
+                            await output.WriteAsync(http407);
+                        }
+
                         break;
                     }
                     else
@@ -79,36 +89,18 @@ namespace KestrelApp.Middleware.HttpProxy
                 }
                 catch (Exception)
                 {
-                    await output.WriteAsync(this.http400, context.ConnectionClosed);
+                    await output.WriteAsync(http400);
                     break;
                 }
             }
         }
 
 
-        private async ValueTask ProcessTunnelAsync(ConnectionContext context, HttpRequestHandler request)
-        {
-            try
-            {
-                using var tunnel = new TunnelProxyConnection(request);
-                await tunnel.ConnectAsync(context.ConnectionClosed);
-                await context.Transport.Output.WriteAsync(this.http200, context.ConnectionClosed);
-
-                this.logger.LogInformation($"隧道代理{request.ProxyHost}开始");
-                await tunnel.TransportAsync(context);
-                this.logger.LogInformation($"隧道代理{request.ProxyHost}结束");
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, $"无法代理{request.ProxyHost}");
-            }
-        }
-
         /// <summary>
         /// 解析http请求
         /// </summary>
         /// <param name="result"></param>
-        /// <param name="requestHandler"></param>
+        /// <param name="request"></param>
         /// <param name="consumed"></param>
         /// <returns></returns>
         private bool ParseRequest(ReadResult result, HttpRequestHandler request, out SequencePosition consumed)
@@ -136,6 +128,9 @@ namespace KestrelApp.Middleware.HttpProxy
             private HttpMethod method;
 
             public HostString ProxyHost { get; private set; }
+
+            public AuthenticationHeaderValue? ProxyAuthorization { get; private set; }
+
 
             public ProxyProtocol ProxyProtocol
             {
@@ -169,9 +164,18 @@ namespace KestrelApp.Middleware.HttpProxy
 
             void IHttpHeadersHandler.OnHeader(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value)
             {
-                // 这里可以处理认证头
-                // 用于验证账号和密码
+                const string proxyAuthorization = "Proxy-Authorization";
+                var headerName = Encoding.ASCII.GetString(name);
+                if (proxyAuthorization.Equals(headerName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var headerValue = Encoding.ASCII.GetString(value);
+                    if (AuthenticationHeaderValue.TryParse(headerValue, out var authentication))
+                    {
+                        this.ProxyAuthorization = authentication;
+                    }
+                }
             }
+
             void IHttpHeadersHandler.OnHeadersComplete(bool endStream)
             {
             }

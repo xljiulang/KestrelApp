@@ -1,5 +1,4 @@
-﻿using KestrelFramework.Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Connections;
+﻿using Microsoft.AspNetCore.Connections;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

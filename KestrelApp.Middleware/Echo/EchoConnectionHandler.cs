@@ -10,13 +10,17 @@ using System.Threading.Tasks;
 namespace KestrelApp.Middleware.Echo
 {
     /// <summary>
-    /// Echo协议连接协议处理
+    /// Echo协议连接协议处理者
     /// </summary>
     public class EchoConnectionHandler : ConnectionHandler
     {
-        private static readonly byte[] hello = Encoding.UTF8.GetBytes("Hello world");
         private readonly ILogger<EchoConnectionHandler> logger;
+        private static readonly byte[] helloWorld = Encoding.UTF8.GetBytes("Hello world");        
 
+        /// <summary>
+        /// Echo协议连接协议处理者
+        /// </summary>
+        /// <param name="logger"></param>
         public EchoConnectionHandler(ILogger<EchoConnectionHandler> logger)
         {
             this.logger = logger;
@@ -32,8 +36,8 @@ namespace KestrelApp.Middleware.Echo
             var input = context.Transport.Input;
             var output = context.Transport.Output;
 
-            output.WriteBigEndian((ushort)hello.Length);
-            output.Write(hello);
+            output.WriteBigEndian((ushort)helloWorld.Length);
+            output.Write(helloWorld);
             await output.FlushAsync();
 
             while (context.ConnectionClosed.IsCancellationRequested == false)

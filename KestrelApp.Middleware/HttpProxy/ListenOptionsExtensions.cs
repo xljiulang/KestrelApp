@@ -1,6 +1,6 @@
 ﻿using KestrelApp.Middleware.HttpProxy;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.AspNetCore.Hosting
 {
@@ -13,10 +13,11 @@ namespace Microsoft.AspNetCore.Hosting
         /// 使用http代理中间件
         /// </summary>
         /// <param name="listen"></param>
-        public static void UseHttpProxy(this ListenOptions listen)
+        public static ListenOptions UseHttpProxy(this ListenOptions listen)
         {
-            var proxyMiddleware = listen.ApplicationServices.GetRequiredService<ProxyMiddleware>();
-            listen.Use(next => context => proxyMiddleware.InvokeAsync(next, context));
+            listen.Use<ProxyMiddleware>();
+            listen.Use<TunnelProxyMiddleware>();
+            return listen;
         }
     }
 }

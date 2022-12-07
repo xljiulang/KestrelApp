@@ -7,7 +7,7 @@ namespace KestrelFramework.Middleware.TlsDetection
     /// <summary>
     /// tls恢复中间件
     /// </summary>
-    static class TlsRestoreMiddleware
+    sealed class TlsRestoreMiddleware : IKestrelMiddleware
     {
         /// <summary>
         /// 执行中间件
@@ -15,7 +15,7 @@ namespace KestrelFramework.Middleware.TlsDetection
         /// <param name="next"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
+        public async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
         {
             if (context.Features.Get<ITlsConnectionFeature>() == FakeTlsConnectionFeature.Instance)
             {

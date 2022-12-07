@@ -1,7 +1,11 @@
 ﻿using KestrelApp.Middleware.HttpProxy;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// ServiceCollection扩展
+    /// </summary>
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
@@ -11,8 +15,10 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddHttproxy(this IServiceCollection services)
         {
+            services.TryAddSingleton<IHttpProxyAuthenticationHandler, HttpProxyAuthenticationHandler>();
             return services
                 .AddSingleton<ProxyMiddleware>()
+                .AddSingleton<TunnelProxyMiddleware>()
                 .AddHttpForwarder();
         }
     }

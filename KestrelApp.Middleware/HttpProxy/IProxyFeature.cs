@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
 
 namespace KestrelApp.Middleware.HttpProxy
 {
@@ -16,5 +17,10 @@ namespace KestrelApp.Middleware.HttpProxy
         /// 代理协议
         /// </summary>
         ProxyProtocol ProxyProtocol { get; }
+
+        /// <summary>
+        /// Proxy-Authorization
+        /// </summary>
+        AuthenticationHeaderValue? ProxyAuthorization { get; }
     }
 }
