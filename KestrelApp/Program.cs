@@ -1,11 +1,10 @@
-using KestrelApp.Telnet;
 using KestrelApp.HttpProxy;
+using KestrelApp.Telnet;
 using KestrelApp.Transforms.SecurityProxy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -20,8 +19,7 @@ namespace KestrelApp
                 .AddConnections()
                 .AddHttproxy()
                 .AddFlowAnalyze()
-                .AddTlsDetect()
-                .AddConnectionFactory();
+                .AddSocketConnectionFactory();
 
             builder.Host.UseSerilog((hosting, logger) =>
             {
@@ -47,10 +45,10 @@ namespace KestrelApp
                     .Endpoint("HttpProxy", endpoint => endpoint.ListenOptions.UseHttpProxy())
 
                     // http和https单端口双协议服务器
-                    .Endpoint("HttpHttps", endpoint => endpoint.ListenOptions.UseTlsDetect())
+                    .Endpoint("HttpHttps", endpoint => endpoint.ListenOptions.UseTlsDetection())
 
                     // echo或echo over tls协议服务器
-                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseTlsDetect().UseEcho());
+                    .Endpoint("Echo", endpoint => endpoint.ListenOptions.UseTlsDetection().UseEcho());
             });
 
             var app = builder.Build();

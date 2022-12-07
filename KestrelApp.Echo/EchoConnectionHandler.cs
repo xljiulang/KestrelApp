@@ -76,7 +76,7 @@ namespace KestrelApp.Echo
             {
                 if (reader.Remaining >= length)
                 {
-                    echo = ArrayPool.Rent<byte>(length);
+                    echo = ArrayPool<byte>.Shared.RentArrayOwner(length);
                     reader.UnreadSpan[..length].CopyTo(echo.Array);
                     reader.Advance(length);
 

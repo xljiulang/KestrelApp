@@ -15,8 +15,11 @@
 * [Buffers](https://learn.microsoft.com/zh-cn/dotnet/standard/io/buffers)
 
 ### 项目介绍
-#### 1 KestrelApp.Client
-让项目支持IConnectionFactory依赖注入，方便从Socket创建ConnectionContext对象
+#### 1 KestrelFramework
+1. System.Buffers: 缓冲区操作类
+2. System.IO: 流的操作类
+3. System.IO.Pipelines: 双工管道操作类
+4. Middleware: kestrel的一些中间件
 
 #### 2 KestrelApp.Telnet
 Telnet协议的简单示例项目，内容包括
@@ -31,17 +34,10 @@ Telnet协议的简单示例项目，内容包括
 4. Http中间件的编写
 5. Yarp的简单使用
 
-#### 4 KestrelApp.TlsDetect
-客户端流量tls协议侦测，内容包括
-1. Kestrel的Transport流量协议侦测
-2. 单端口多协议服务器的编写技巧
-
-#### 5 KestrelApp.Transforms
+#### 4 KestrelApp.Transforms
 Kestrel流量的变换，内容包括
-1. IDuplexPipe包装为Stream
-2. Stream委托
-3. Kestrel的Transport的替换
-4. 全局流量分析和流量加解密
+1. 全局流量分析
+2. 流量Xor变换
 
 ### 开源有你更精彩
 ![打赏](reward.png)

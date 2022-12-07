@@ -4,19 +4,19 @@ using System.Buffers;
 using System.IO.Pipelines;
 using System.Threading.Tasks;
 
-namespace KestrelApp.TlsDetect
+namespace KestrelFramework.Middleware.TlsDetection
 {
     /// <summary>
-    /// https入侵中间件
+    /// tls入侵中间件
     /// </summary>
-    sealed class TlsInvadeMiddleware
-    {  
+    static class TlsInvadeMiddleware
+    {
         /// <summary>
         /// 执行中间件
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
+        public static async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
         {
             // 连接不是tls
             if (await IsTlsConnectionAsync(context) == false)

@@ -2,19 +2,19 @@
 using Microsoft.AspNetCore.Http.Features;
 using System.Threading.Tasks;
 
-namespace KestrelApp.TlsDetect
+namespace KestrelFramework.Middleware.TlsDetection
 {
     /// <summary>
-    /// https恢复中间件
+    /// tls恢复中间件
     /// </summary>
-    sealed class TlsRestoreMiddleware
+    static class TlsRestoreMiddleware
     {
         /// <summary>
         /// 执行中间件
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
+        public static async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
         {
             if (context.Features.Get<ITlsConnectionFeature>() == FakeTlsConnectionFeature.Instance)
             {

@@ -12,11 +12,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\KestrelApp.Client\KestrelApp.Client.csproj" />
 		<ProjectReference Include="..\KestrelApp.Echo\KestrelApp.Echo.csproj" />
 		<ProjectReference Include="..\KestrelApp.HttpProxy\KestrelApp.HttpProxy.csproj" />
 		<ProjectReference Include="..\KestrelApp.Telnet\KestrelApp.Telnet.csproj" />
-		<ProjectReference Include="..\KestrelApp.TlsDetect\KestrelApp.TlsDetect.csproj" />
 		<ProjectReference Include="..\KestrelApp.Transforms\KestrelApp.Transforms.csproj" />
 	</ItemGroup>
 

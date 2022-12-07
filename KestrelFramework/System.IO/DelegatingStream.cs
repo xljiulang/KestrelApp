@@ -3,22 +3,29 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace KestrelApp.Transforms
+namespace System.IO
 {
-    abstract class DelegatingStream : Stream
+    /// <summary>
+    /// 委托流
+    /// </summary>
+    public abstract class DelegatingStream : Stream
     {
         protected Stream Inner { get; }
 
+        /// <summary>
+        /// 委托流
+        /// </summary>
+        /// <param name="inner"></param>
         public DelegatingStream(Stream inner)
         {
-            this.Inner = inner;
+            Inner = inner;
         }
 
         public override bool CanRead
         {
             get
             {
-                return this.Inner.CanRead;
+                return Inner.CanRead;
             }
         }
 
@@ -26,7 +33,7 @@ namespace KestrelApp.Transforms
         {
             get
             {
-                return this.Inner.CanSeek;
+                return Inner.CanSeek;
             }
         }
 
@@ -34,7 +41,7 @@ namespace KestrelApp.Transforms
         {
             get
             {
-                return this.Inner.CanWrite;
+                return Inner.CanWrite;
             }
         }
 
@@ -42,7 +49,7 @@ namespace KestrelApp.Transforms
         {
             get
             {
-                return this.Inner.Length;
+                return Inner.Length;
             }
         }
 
@@ -50,73 +57,73 @@ namespace KestrelApp.Transforms
         {
             get
             {
-                return this.Inner.Position;
+                return Inner.Position;
             }
 
             set
             {
-                this.Inner.Position = value;
+                Inner.Position = value;
             }
         }
 
         public override void Flush()
         {
-            this.Inner.Flush();
+            Inner.Flush();
         }
 
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            return this.Inner.FlushAsync(cancellationToken);
+            return Inner.FlushAsync(cancellationToken);
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return this.Inner.Read(buffer, offset, count);
+            return Inner.Read(buffer, offset, count);
         }
 
         public override int Read(Span<byte> destination)
         {
-            return this.Inner.Read(destination);
+            return Inner.Read(destination);
         }
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return this.Inner.ReadAsync(buffer, offset, count, cancellationToken);
+            return Inner.ReadAsync(buffer, offset, count, cancellationToken);
         }
 
         public override ValueTask<int> ReadAsync(Memory<byte> destination, CancellationToken cancellationToken = default)
         {
-            return this.Inner.ReadAsync(destination, cancellationToken);
+            return Inner.ReadAsync(destination, cancellationToken);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return this.Inner.Seek(offset, origin);
+            return Inner.Seek(offset, origin);
         }
 
         public override void SetLength(long value)
         {
-            this.Inner.SetLength(value);
+            Inner.SetLength(value);
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            this.Inner.Write(buffer, offset, count);
+            Inner.Write(buffer, offset, count);
         }
 
         public override void Write(ReadOnlySpan<byte> source)
         {
-            this.Inner.Write(source);
+            Inner.Write(source);
         }
 
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return this.Inner.WriteAsync(buffer, offset, count, cancellationToken);
+            return Inner.WriteAsync(buffer, offset, count, cancellationToken);
         }
 
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> source, CancellationToken cancellationToken = default)
         {
-            return this.Inner.WriteAsync(source, cancellationToken);
+            return Inner.WriteAsync(source, cancellationToken);
         }
 
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
