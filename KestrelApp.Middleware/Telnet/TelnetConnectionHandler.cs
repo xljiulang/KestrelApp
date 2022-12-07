@@ -18,18 +18,18 @@ namespace KestrelApp.Middleware.Telnet
         /// <summary>
         /// 收到Telnet连接后
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        public override async Task OnConnectedAsync(ConnectionContext connection)
+        public override async Task OnConnectedAsync(ConnectionContext context)
         {
-            var input = connection.Transport.Input;
-            var output = connection.Transport.Output;
+            var input = context.Transport.Input;
+            var output = context.Transport.Output;
 
             output.WriteLine($"Welcome to {Dns.GetHostName()} !");
             output.WriteLine($"It is {DateTime.Now} now !");
-            await output.FlushAsync(connection.ConnectionClosed);
+            await output.FlushAsync();
 
-            while (connection.ConnectionClosed.IsCancellationRequested == false)
+            while (context.ConnectionClosed.IsCancellationRequested == false)
             {
                 var result = await input.ReadAsync();
                 if (result.IsCanceled)
@@ -39,7 +39,7 @@ namespace KestrelApp.Middleware.Telnet
 
                 if (TryReadMessage(result, out var message, out var consumed))
                 {
-                    await ProcessMessageAsync(message, connection);
+                    await ProcessMessageAsync(context, message);
                     input.AdvanceTo(consumed);
                 }
                 else
@@ -54,9 +54,9 @@ namespace KestrelApp.Middleware.Telnet
             }
         }
 
-        private static async ValueTask ProcessMessageAsync(string message, ConnectionContext connection)
+        private static async ValueTask ProcessMessageAsync(ConnectionContext context, string message)
         {
-            var output = connection.Transport.Output;
+            var output = context.Transport.Output;
             if (string.IsNullOrEmpty(message))
             {
                 await output.WriteLineAsync("Please type something.");
@@ -64,7 +64,7 @@ namespace KestrelApp.Middleware.Telnet
             else if (message.Equals("bye", StringComparison.OrdinalIgnoreCase))
             {
                 await output.WriteLineAsync("Have a good day!");
-                connection.Abort();
+                context.Abort();
             }
             else
             {

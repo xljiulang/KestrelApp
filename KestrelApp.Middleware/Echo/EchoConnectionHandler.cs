@@ -25,17 +25,18 @@ namespace KestrelApp.Middleware.Echo
         /// <summary>
         /// 收到Echo连接后
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
-        public override async Task OnConnectedAsync(ConnectionContext connection)
+        public override async Task OnConnectedAsync(ConnectionContext context)
         {
-            var input = connection.Transport.Input;
-            var output = connection.Transport.Output;
+            var input = context.Transport.Input;
+            var output = context.Transport.Output;
 
             output.WriteBigEndian((ushort)hello.Length);
             output.Write(hello);
+            await output.FlushAsync();
 
-            while (connection.ConnectionClosed.IsCancellationRequested == false)
+            while (context.ConnectionClosed.IsCancellationRequested == false)
             {
                 var result = await input.ReadAsync();
                 if (result.IsCanceled)
