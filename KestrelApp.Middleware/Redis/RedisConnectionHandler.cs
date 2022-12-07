@@ -1,4 +1,4 @@
-﻿using KestrelFramework.Pipelines;
+﻿using KestrelFramework.Application;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,7 +13,7 @@ namespace KestrelApp.Middleware.Redis
     sealed class RedisConnectionHandler : ConnectionHandler
     {
         private readonly ILogger<RedisConnectionHandler> logger;
-        private readonly InvokeDelegate<RedisContext> invokeDelegate;
+        private readonly ApplicationDelegate<RedisContext> application;
 
         /// <summary>
         /// Redis连接处理者
@@ -28,12 +28,12 @@ namespace KestrelApp.Middleware.Redis
         {
             this.logger = logger;
 
-            var builder = new PipelineBuilder<RedisContext>(appServices, context =>
+            var builder = new AppliactionBuilder<RedisContext>(appServices, context =>
             {
                 return context.Client.ResponseAsync(RedisResponse.Err);
             });
 
-            builder.Use<AuthMiddleware>();
+            builder.Use<AuthenticationMiddleware>();
 
             // 添加cmd条件分支
             foreach (var cmd in cmdHanlers)
@@ -41,7 +41,7 @@ namespace KestrelApp.Middleware.Redis
                 builder.When(cmd.CanHandle, cmd.HandleAsync);
             }
 
-            this.invokeDelegate = builder.Build();
+            this.application = builder.Build();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace KestrelApp.Middleware.Redis
         {
             try
             {
-                var client = new RedisClient(context, this.invokeDelegate);
+                var client = new RedisClient(context, this.application);
                 await client.ProcessRedisAsync();
             }
             catch (Exception ex)

@@ -1,6 +1,5 @@
-﻿using KestrelFramework.Pipelines;
+﻿using KestrelFramework.Application;
 using Microsoft.AspNetCore.Connections;
-using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,17 +11,12 @@ namespace KestrelApp.Middleware.Redis
     sealed class RedisClient
     {
         private readonly ConnectionContext context;
-        private readonly InvokeDelegate<RedisContext> invokeDelegate;
+        private readonly ApplicationDelegate<RedisContext> application;
 
         /// <summary>
         /// 获取或设置是否已授权
         /// </summary>
         public bool? IsAuthed { get; set; }
-
-        /// <summary>
-        /// 获取连接时间
-        /// </summary>
-        public DateTime ConnectedTime { get; } = DateTime.Now;
 
         /// <summary>
         /// 获取远程终结点
@@ -33,11 +27,11 @@ namespace KestrelApp.Middleware.Redis
         /// Redis客户端
         /// </summary>
         /// <param name="context"></param> 
-        /// <param name="invokeDelegate"></param>
-        public RedisClient(ConnectionContext context, InvokeDelegate<RedisContext> invokeDelegate)
+        /// <param name="application"></param>
+        public RedisClient(ConnectionContext context, ApplicationDelegate<RedisContext> application)
         {
             this.context = context;
-            this.invokeDelegate = invokeDelegate;
+            this.application = application;
         }
 
         /// <summary>
@@ -68,7 +62,7 @@ namespace KestrelApp.Middleware.Redis
                 foreach (var cmd in cmds)
                 {
                     var context = new RedisContext(this, cmd);
-                    await this.invokeDelegate(context);
+                    await this.application(context);
                 }
 
                 if (result.IsCompleted)

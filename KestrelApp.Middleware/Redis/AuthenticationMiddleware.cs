@@ -1,4 +1,4 @@
-﻿using KestrelFramework.Pipelines;
+﻿using KestrelFramework.Application;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
@@ -7,16 +7,16 @@ namespace KestrelApp.Middleware.Redis
     /// <summary>
     /// 认证中间件
     /// </summary>
-    sealed class AuthMiddleware : IMiddleware<RedisContext>
+    sealed class AuthenticationMiddleware : IApplicationMiddleware<RedisContext>
     {
         private readonly IOptionsMonitor<RedisOptions> options;
 
-        public AuthMiddleware(IOptionsMonitor<RedisOptions> options)
+        public AuthenticationMiddleware(IOptionsMonitor<RedisOptions> options)
         {
             this.options = options;
         }
 
-        public async Task InvokeAsync(InvokeDelegate<RedisContext> next, RedisContext context)
+        public async Task InvokeAsync(ApplicationDelegate<RedisContext> next, RedisContext context)
         {
             if (context.Client.IsAuthed == false)
             {
