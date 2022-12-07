@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Connections
         /// <param name="builder"></param>
         /// <returns></returns>
         public static IConnectionBuilder Use<TMiddleware>(this IConnectionBuilder builder)
-            where TMiddleware : class, IKestrelMiddleware
+            where TMiddleware : IKestrelMiddleware
         {
             var middleware = ActivatorUtilities.GetServiceOrCreateInstance<TMiddleware>(builder.ApplicationServices);
             return builder.Use(middleware);
