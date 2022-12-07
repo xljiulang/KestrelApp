@@ -1,10 +1,11 @@
 # KestrelApp
 基于Kestrel的网络编程应用示例
 
-### 1 项目用途
+### 1 项目意图
 1. 了解网络编程不再需要从Socket开始
 2. 了解网络编程不再需要第三方框架(包括Dotnetty)
 3. 了解`telnet` over `websocket` over `tls` over `xxx私有加密` over `tcp`的套娃网络编程
+4. 能基于KestrelFramework开发网络应用
 
 ### 2 文档资料
 **内部文档**：[docs](docs)
@@ -15,10 +16,11 @@
 
 ### 3 KestrelFramework
 kestrel网络编程一些必要的基础库
-1. System.Buffers: 缓冲区操作类
-2. System.IO: 流的操作类
-3. System.IO.Pipelines: 双工管道操作类
-4. Middleware: kestrel的一些中间件
+1. Kestrel中间件接口与中间注册
+2. System.Buffers: 缓冲区操作类
+3. System.IO: 流的操作类
+4. System.IO.Pipelines: 双工管道操作类
+5. Middleware: kestrel的一些中间件
 
 ### 4 KestrelApp
 Kestrel应用程序，内容包括
