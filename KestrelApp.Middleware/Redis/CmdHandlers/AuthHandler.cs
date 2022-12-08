@@ -32,18 +32,20 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
         public async ValueTask HandleAsync(RedisContext context)
         {
             var client = context.Client;
-            if (client.IsAuthed == null)
+            var auth = this.options.CurrentValue.Auth;
+
+            if (string.IsNullOrEmpty(auth))
             {
-                var auth = this.options.CurrentValue.Auth;
-                if (string.IsNullOrEmpty(auth))
-                {
-                    client.IsAuthed = true;
-                }
-                else if (context.Reqeust.ArgumentCount > 0)
-                {
-                    var password = context.Reqeust.Argument(0).Value;
-                    client.IsAuthed = password.Span.SequenceEqual(Encoding.UTF8.GetBytes(auth));
-                }
+                client.IsAuthed = true;
+            }
+            else if (context.Reqeust.ArgumentCount > 0)
+            {
+                var password = context.Reqeust.Argument(0).Value;
+                client.IsAuthed = password.Span.SequenceEqual(Encoding.UTF8.GetBytes(auth));
+            }
+            else
+            {
+                client.IsAuthed = false;
             }
 
             if (client.IsAuthed == true)
