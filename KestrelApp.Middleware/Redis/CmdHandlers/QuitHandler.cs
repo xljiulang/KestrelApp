@@ -5,7 +5,7 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// 退出
     /// </summary>
-    sealed class QiuitHandler : IRedisCmdHanler
+    sealed class QuitHandler : IRedisCmdHanler
     {
         public RedisCmd Cmd => RedisCmd.Quit;
 
