@@ -14,9 +14,9 @@ namespace KestrelApp.Middleware.Telnet
         public TelnetContext(string request, ConnectionContext context)
             : base(context.Features)
         {
-            this.Request = request;
             this.context = context;
-            this.Response = new TelnetResponse(context.Transport.Output);
+            this.Request = request;
+            this.Response = this.Features.Get<TelnetResponse>()!;
         }
 
         public void Abort()
