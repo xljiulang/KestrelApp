@@ -15,7 +15,7 @@ namespace KestrelApp.Middleware.Echo
     public class EchoConnectionHandler : ConnectionHandler
     {
         private readonly ILogger<EchoConnectionHandler> logger;
-        private static readonly byte[] helloWorld = Encoding.UTF8.GetBytes("Hello world");        
+        private static readonly byte[] helloWorld = Encoding.UTF8.GetBytes("Hello world");
 
         /// <summary>
         /// Echo协议连接协议处理者
@@ -82,7 +82,7 @@ namespace KestrelApp.Middleware.Echo
                 if (reader.Remaining >= length)
                 {
                     echo = ArrayPool<byte>.Shared.RentArrayOwner(length);
-                    reader.UnreadSpan[..length].CopyTo(echo.Array);
+                    reader.UnreadSequence.Slice(0, length).CopyTo(echo.Array);
                     reader.Advance(length);
 
                     consumed = reader.Position;
