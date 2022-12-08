@@ -47,5 +47,8 @@ http代理应用协议的示例
 #### 5.6 TelnetProxy
 流量转发到telnet服务器的的示例
 
+#### 5.6 Redis
+redis协议服务器，展示如何使用应用中间件的示例
+
 ### 开源有你更精彩
 ![打赏](reward.png)
