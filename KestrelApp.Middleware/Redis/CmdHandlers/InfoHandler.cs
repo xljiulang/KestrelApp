@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace KestrelApp.Middleware.Redis.CmdHandlers
 {
@@ -8,7 +7,7 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// </summary>
     sealed class InfoHandler : RedisCmdHandler
     {
-        public override RedisCmdName CmdName => RedisCmdName.Info; 
+        public override RedisCmdName CmdName => RedisCmdName.Info;
 
         /// <summary>
         /// 处理命令
@@ -24,21 +23,13 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
 
         private class InfoResponse : RedisResponse
         {
-            private readonly BufferBuilder builder = new();
-
             public InfoResponse(string info)
             {
                 //$935
                 //redis_version: 2.4.6
 
-                builder
-                    .Write('$').Write(info.Length.ToString()).WriteLine()
+                this.Write('$').Write(info.Length.ToString()).WriteLine()
                     .Write(info).WriteLine();
-            }
-
-            public override ReadOnlyMemory<byte> ToMemory()
-            {
-                return this.builder.WrittenMemory;
             }
         }
     }

@@ -77,7 +77,7 @@ namespace KestrelApp.Middleware.Redis
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public async Task ResponseAsync(RedisResponse response)
+        public async Task ResponseAsync(IRedisResponse response)
         {
             await this.context.Transport.Output.WriteAsync(response.ToMemory());
         }

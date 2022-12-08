@@ -28,8 +28,6 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
         /// </summary>
         private class EchoResponse : RedisResponse
         {
-            private readonly BufferBuilder builder = new();
-
             /// <summary>
             /// 回声命令
             /// </summary>
@@ -38,16 +36,9 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
             {
                 //$2
                 //xx 
-                this.builder
-                    .Write('$').Write(echo.Value.Length.ToString()).WriteLine()
+                this.Write('$').Write(echo.Value.Length.ToString()).WriteLine()
                     .Write(echo.Value).WriteLine();
-            }
-
-
-            public override ReadOnlyMemory<byte> ToMemory()
-            {
-                return this.builder.WrittenMemory;
-            }
+            } 
         }
     }
 }

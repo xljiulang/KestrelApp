@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Text;
 
 namespace KestrelApp.Middleware.Redis
@@ -6,63 +7,76 @@ namespace KestrelApp.Middleware.Redis
     /// <summary>
     /// 表示redis回复
     /// </summary>
-    abstract class RedisResponse
+    class RedisResponse : IRedisResponse
     {
         /// <summary>
         /// OK
         /// </summary>
-        public static RedisResponse OK { get; } = new StringRepy("+OK\r\n");
+        public static IRedisResponse OK { get; } = new StringResponse("+OK\r\n");
 
         /// <summary>
         /// Error
         /// </summary>
-        public static RedisResponse Err { get; } = new StringRepy("-ERR\r\n");
+        public static IRedisResponse Err { get; } = new StringResponse("-ERR\r\n");
 
         /// <summary>
         /// pong
         /// </summary>
-        public static RedisResponse Pong { get; } = new StringRepy("+PONG\r\n");
+        public static IRedisResponse Pong { get; } = new StringResponse("+PONG\r\n");
+
+
+        private readonly ArrayBufferWriter<byte> writer = new();
+
+        /// <summary>
+        /// 写入\r\n
+        /// </summary>
+        /// <returns></returns>
+        public RedisResponse WriteLine()
+        {
+            this.writer.WriteCRLF();
+            return this;
+        }
+
+        public RedisResponse Write(ReadOnlyMemory<byte> value)
+        {
+            this.writer.Write(value.Span);
+            return this;
+        }
+
+        public RedisResponse Write(ReadOnlySpan<char> value)
+        {
+            this.writer.Write(value, Encoding.UTF8);
+            return this;
+        }
+
+        public RedisResponse Write(char value)
+        {
+            this.writer.Write((byte)value);
+            return this;
+        }
 
         /// <summary>
         /// 转换为Memory
         /// </summary>
         /// <returns></returns>
-        public abstract ReadOnlyMemory<byte> ToMemory();
-
-        /// <summary>
-        /// 数字
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static RedisResponse Number(int value)
+        public ReadOnlyMemory<byte> ToMemory()
         {
-            return new NumberReply(value);
-        }
-        
-        /// <summary>
-        /// 数字回复
-        /// </summary>
-        private class NumberReply : StringRepy
-        {
-            public NumberReply(int value)
-                : base($":{value}\r\n")
-            {
-            }
+            return this.writer.WrittenMemory;
         }
 
         /// <summary>
         /// 文本回复
         /// </summary>
-        private class StringRepy : RedisResponse
+        private class StringResponse : IRedisResponse
         {
-            private readonly Memory<byte> value;
+            private readonly ReadOnlyMemory<byte> value;
 
-            public StringRepy(string value)
+            public StringResponse(string value)
             {
                 this.value = Encoding.UTF8.GetBytes(value);
             }
 
-            public override ReadOnlyMemory<byte> ToMemory()
+            public ReadOnlyMemory<byte> ToMemory()
             {
                 return this.value;
             }
