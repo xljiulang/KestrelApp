@@ -1,8 +1,8 @@
-﻿using KestrelFramework.Application;
+﻿using KestrelApp.Middleware.Redis.Middlewares;
+using KestrelFramework.Application;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace KestrelApp.Middleware.Redis
@@ -18,30 +18,18 @@ namespace KestrelApp.Middleware.Redis
         /// <summary>
         /// Redis连接处理者
         /// </summary> 
-        /// <param name="appServices"></param>
-        /// <param name="cmdHanlers"></param> 
+        /// <param name="appServices"></param> 
         /// <param name="logger"></param>
         public RedisConnectionHandler(
             IServiceProvider appServices,
-            IEnumerable<ICmdHanler> cmdHanlers,
             ILogger<RedisConnectionHandler> logger)
         {
             this.logger = logger;
-
-            var builder = new AppliactionBuilder<RedisContext>(appServices, context =>
-            {
-                return context.Client.ResponseAsync(RedisResponse.Err);
-            });
-
-            builder.Use<AuthenticationMiddleware>();
-
-            // 添加cmd条件分支
-            foreach (var cmd in cmdHanlers)
-            {
-                builder.When(cmd.CanHandle, cmd.HandleAsync);
-            }
-
-            this.application = builder.Build();
+            this.application = new AppliactionBuilder<RedisContext>(appServices)
+                .Use<AuthMiddleware>()
+                .Use<CmdMiddleware>()
+                .Use<FallbackMiddlware>()
+                .Build();
         }
 
         /// <summary>

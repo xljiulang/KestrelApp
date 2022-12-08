@@ -5,17 +5,10 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Ping处理者
     /// </summary>
-    sealed class PingHandler : CmdHandler
+    sealed class PingHandler : RedisCmdHandler
     {
-        /// <summary>
-        /// 是否能处理
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override bool CanHandle(RedisContext context)
-        {
-            return context.Cmd.Name == RedisCmdName.Ping;
-        }
+        public override RedisCmdName CmdName => RedisCmdName.Ping;
+         
 
         /// <summary>
         /// 处理ping

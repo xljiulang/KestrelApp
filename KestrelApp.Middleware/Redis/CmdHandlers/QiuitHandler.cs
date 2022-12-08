@@ -5,18 +5,10 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// 退出
     /// </summary>
-    sealed class QiuitHandler : CmdHandler
+    sealed class QiuitHandler : RedisCmdHandler
     {
-        /// <summary>
-        /// 是否能处理
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override bool CanHandle(RedisContext context)
-        {
-            return context.Cmd.Name == RedisCmdName.Quit;
-        }
-
+        public override RedisCmdName CmdName => RedisCmdName.Quit;
+         
         /// <summary>
         /// 处理命令
         /// </summary>

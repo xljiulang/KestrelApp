@@ -28,13 +28,14 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddRedis(this IServiceCollection services)
         {
-            var handlerTypes = typeof(ICmdHanler).Assembly.GetTypes()
-                .Where(item => typeof(ICmdHanler).IsAssignableFrom(item))
-                .Where(item => item.IsAbstract == false);
+            var serviceType = typeof(IRedisCmdHanler);
+            var cmdHandlerTypes = serviceType.Assembly.GetTypes()
+                .Where(item => serviceType.IsAssignableFrom(item))
+                .Where(item => item.IsClass && item.IsAbstract == false);
 
-            foreach (var type in handlerTypes)
+            foreach (var implementationType in cmdHandlerTypes)
             {
-                var descriptor = ServiceDescriptor.Singleton(typeof(ICmdHanler), type);
+                var descriptor = ServiceDescriptor.Singleton(serviceType, implementationType);
                 services.TryAddEnumerable(descriptor);
             }
 

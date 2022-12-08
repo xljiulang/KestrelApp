@@ -6,17 +6,9 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Info处理者
     /// </summary>
-    sealed class InfoHandler : CmdHandler
+    sealed class InfoHandler : RedisCmdHandler
     {
-        /// <summary>
-        /// 是否能处理
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override bool CanHandle(RedisContext context)
-        {
-            return context.Cmd.Name == RedisCmdName.Info;
-        }
+        public override RedisCmdName CmdName => RedisCmdName.Info; 
 
         /// <summary>
         /// 处理命令

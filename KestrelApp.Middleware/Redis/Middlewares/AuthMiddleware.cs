@@ -1,18 +1,23 @@
 ﻿using KestrelFramework.Application;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
-namespace KestrelApp.Middleware.Redis
+namespace KestrelApp.Middleware.Redis.Middlewares
 {
     /// <summary>
     /// 认证中间件
     /// </summary>
-    sealed class AuthenticationMiddleware : IApplicationMiddleware<RedisContext>
+    sealed class AuthMiddleware : IRedisMiddleware
     {
+        private readonly ILogger<AuthMiddleware> logger;
         private readonly IOptionsMonitor<RedisOptions> options;
 
-        public AuthenticationMiddleware(IOptionsMonitor<RedisOptions> options)
+        public AuthMiddleware(
+            ILogger<AuthMiddleware> logger,
+            IOptionsMonitor<RedisOptions> options)
         {
+            this.logger = logger;
             this.options = options;
         }
 
@@ -28,14 +33,14 @@ namespace KestrelApp.Middleware.Redis
             }
             else if (context.Cmd.Name != RedisCmdName.Auth)
             {
-                if (string.IsNullOrEmpty(this.options.CurrentValue.Auth))
+                if (string.IsNullOrEmpty(options.CurrentValue.Auth))
                 {
                     context.Client.IsAuthed = true;
                     await next(context);
                 }
                 else
                 {
-                    // 这里应该要提示需要Auth信息
+                    this.logger.LogWarning("需要客户端Auth");
                     await context.Client.ResponseAsync(RedisResponse.Err);
                 }
             }

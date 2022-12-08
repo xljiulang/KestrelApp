@@ -5,14 +5,12 @@ namespace KestrelApp.Middleware.Redis
     /// <summary>
     /// 表示Redis命令处理者
     /// </summary>
-    abstract class CmdHandler : ICmdHanler
+    abstract class RedisCmdHandler : IRedisCmdHanler
     {
         /// <summary>
-        /// 返回是否可以处理
+        /// 获取能处理的cmd名称
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public abstract bool CanHandle(RedisContext context);
+        public abstract RedisCmdName CmdName { get; }
 
         /// <summary>
         /// 处理命令

@@ -9,9 +9,11 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Auth处理者
     /// </summary>
-    sealed class AuthHandler : CmdHandler
+    sealed class AuthHandler : RedisCmdHandler
     {
         private readonly IOptionsMonitor<RedisOptions> options;
+
+        public override RedisCmdName CmdName => RedisCmdName.Auth;
 
         /// <summary>
         /// Auth处理者
@@ -20,16 +22,6 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
         public AuthHandler(IOptionsMonitor<RedisOptions> options)
         {
             this.options = options;
-        }
-
-        /// <summary>
-        /// 是否能处理
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override bool CanHandle(RedisContext context)
-        {
-            return context.Cmd.Name == RedisCmdName.Auth;
         }
 
         /// <summary>
