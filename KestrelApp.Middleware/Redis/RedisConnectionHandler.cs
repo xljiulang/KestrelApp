@@ -25,7 +25,7 @@ namespace KestrelApp.Middleware.Redis
             ILogger<RedisConnectionHandler> logger)
         {
             this.logger = logger;
-            this.application = new AppliactionBuilder<RedisContext>(appServices)
+            this.application = new ApplicationBuilder<RedisContext>(appServices)
                 .Use<AuthMiddleware>()
                 .Use<CmdMiddleware>()
                 .Use<FallbackMiddlware>()

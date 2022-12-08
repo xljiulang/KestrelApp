@@ -8,7 +8,7 @@ namespace KestrelFramework.Application
     /// <summary>
     /// 表示应用程序创建者
     /// </summary>
-    public class AppliactionBuilder<TContext>
+    public class ApplicationBuilder<TContext>
     {
         private readonly ApplicationDelegate<TContext> fallbackHandler;
         private readonly List<Func<ApplicationDelegate<TContext>, ApplicationDelegate<TContext>>> middlewares = new();
@@ -22,7 +22,7 @@ namespace KestrelFramework.Application
         /// 应用程序创建者
         /// </summary>
         /// <param name="appServices"></param>
-        public AppliactionBuilder(IServiceProvider appServices)
+        public ApplicationBuilder(IServiceProvider appServices)
             : this(appServices, context => Task.CompletedTask)
         {
         }
@@ -32,7 +32,7 @@ namespace KestrelFramework.Application
         /// </summary>
         /// <param name="appServices"></param>
         /// <param name="fallbackHandler">回退处理者</param>
-        public AppliactionBuilder(IServiceProvider appServices, ApplicationDelegate<TContext> fallbackHandler)
+        public ApplicationBuilder(IServiceProvider appServices, ApplicationDelegate<TContext> fallbackHandler)
         {
             this.ApplicationServices = appServices;
             this.fallbackHandler = fallbackHandler;
@@ -57,9 +57,9 @@ namespace KestrelFramework.Application
         /// 使用默认配制创建新的PipelineBuilder
         /// </summary>
         /// <returns></returns>
-        public AppliactionBuilder<TContext> New()
+        public ApplicationBuilder<TContext> New()
         {
-            return new AppliactionBuilder<TContext>(this.ApplicationServices, this.fallbackHandler);
+            return new ApplicationBuilder<TContext>(this.ApplicationServices, this.fallbackHandler);
         }         
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace KestrelFramework.Application
         /// <param name="predicate"></param>
         /// <param name="handler"></param> 
         /// <returns></returns>
-        public AppliactionBuilder<TContext> When(Func<TContext, bool> predicate, ApplicationDelegate<TContext> handler)
+        public ApplicationBuilder<TContext> When(Func<TContext, bool> predicate, ApplicationDelegate<TContext> handler)
         {
             return this.Use(next => async context =>
             {
@@ -90,7 +90,7 @@ namespace KestrelFramework.Application
         /// <param name="predicate"></param>
         /// <param name="configureAction"></param>
         /// <returns></returns>
-        public AppliactionBuilder<TContext> When(Func<TContext, bool> predicate, Action<AppliactionBuilder<TContext>> configureAction)
+        public ApplicationBuilder<TContext> When(Func<TContext, bool> predicate, Action<ApplicationBuilder<TContext>> configureAction)
         {
             return this.Use(next => async context =>
             {
@@ -112,7 +112,7 @@ namespace KestrelFramework.Application
         /// </summary>
         /// <typeparam name="TMiddleware"></typeparam>
         /// <returns></returns>
-        public AppliactionBuilder<TContext> Use<TMiddleware>()
+        public ApplicationBuilder<TContext> Use<TMiddleware>()
             where TMiddleware : IApplicationMiddleware<TContext>
         {
             var middleware = ActivatorUtilities.GetServiceOrCreateInstance<TMiddleware>(this.ApplicationServices);
@@ -125,7 +125,7 @@ namespace KestrelFramework.Application
         /// <typeparam name="TMiddleware"></typeparam> 
         /// <param name="middleware"></param>
         /// <returns></returns>
-        public AppliactionBuilder<TContext> Use<TMiddleware>(TMiddleware middleware)
+        public ApplicationBuilder<TContext> Use<TMiddleware>(TMiddleware middleware)
             where TMiddleware : IApplicationMiddleware<TContext>
         {
             return this.Use(middleware.InvokeAsync);
@@ -136,7 +136,7 @@ namespace KestrelFramework.Application
         /// </summary>  
         /// <param name="middleware"></param>
         /// <returns></returns>
-        public AppliactionBuilder<TContext> Use(Func<ApplicationDelegate<TContext>, TContext, Task> middleware)
+        public ApplicationBuilder<TContext> Use(Func<ApplicationDelegate<TContext>, TContext, Task> middleware)
         {
             return this.Use(next => context => middleware(next, context));
         }
@@ -146,7 +146,7 @@ namespace KestrelFramework.Application
         /// </summary>
         /// <param name="middleware"></param>
         /// <returns></returns>
-        public AppliactionBuilder<TContext> Use(Func<ApplicationDelegate<TContext>, ApplicationDelegate<TContext>> middleware)
+        public ApplicationBuilder<TContext> Use(Func<ApplicationDelegate<TContext>, ApplicationDelegate<TContext>> middleware)
         {
             this.middlewares.Add(middleware);
             return this;

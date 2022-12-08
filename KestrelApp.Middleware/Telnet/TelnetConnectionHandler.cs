@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Connections;
+﻿using KestrelApp.Middleware.Telnet.Middleware;
+using KestrelFramework.Application;
+using Microsoft.AspNetCore.Connections;
 using System;
 using System.Buffers;
 using System.IO.Pipelines;
@@ -15,6 +17,21 @@ namespace KestrelApp.Middleware.Telnet
     {
         private static readonly byte[] crlf = Encoding.ASCII.GetBytes("\r\n");
 
+        private readonly ApplicationDelegate<TelnetContext> application;
+
+        /// <summary>
+        /// Telnet连接协议处理
+        /// </summary>
+        /// <param name="appServices"></param>
+        public TelnetConnectionHandler(IServiceProvider appServices)
+        {
+            this.application = new ApplicationBuilder<TelnetContext>(appServices)
+                .Use<EmptyMiddleware>()
+                .Use<ByeMiddlware>()
+                .Use<EchoMiddleware>()
+                .Build();
+        }
+
         /// <summary>
         /// 收到Telnet连接后
         /// </summary>
@@ -25,9 +42,10 @@ namespace KestrelApp.Middleware.Telnet
             var input = context.Transport.Input;
             var output = context.Transport.Output;
 
-            output.WriteLine($"Welcome to {Dns.GetHostName()} !");
-            output.WriteLine($"It is {DateTime.Now} now !");
-            await output.FlushAsync();
+            var response = new TelnetResponse(output);
+            response.WriteLine($"Welcome to {Dns.GetHostName()} !");
+            response.WriteLine($"It is {DateTime.Now} now !");
+            await response.FlushAsync();
 
             while (context.ConnectionClosed.IsCancellationRequested == false)
             {
@@ -37,10 +55,12 @@ namespace KestrelApp.Middleware.Telnet
                     break;
                 }
 
-                if (TryReadMessage(result, out var message, out var consumed))
+                if (TryReadRequest(result, out var request, out var consumed))
                 {
-                    await ProcessMessageAsync(context, message);
                     input.AdvanceTo(consumed);
+
+                    var telnetContenxt = new TelnetContext(request, context);
+                    await this.application.Invoke(telnetContenxt);
                 }
                 else
                 {
@@ -54,36 +74,18 @@ namespace KestrelApp.Middleware.Telnet
             }
         }
 
-        private static async ValueTask ProcessMessageAsync(ConnectionContext context, string message)
-        {
-            var output = context.Transport.Output;
-            if (string.IsNullOrEmpty(message))
-            {
-                await output.WriteLineAsync("Please type something.");
-            }
-            else if (message.Equals("bye", StringComparison.OrdinalIgnoreCase))
-            {
-                await output.WriteLineAsync("Have a good day!");
-                context.Abort();
-            }
-            else
-            {
-                await output.WriteLineAsync($"Did you say '{message}'?");
-            }
-        }
-
-        private static bool TryReadMessage(ReadResult result, out string message, out SequencePosition consumed)
+        private static bool TryReadRequest(ReadResult result, out string request, out SequencePosition consumed)
         {
             var reader = new SequenceReader<byte>(result.Buffer);
             if (reader.TryReadTo(out ReadOnlySpan<byte> span, crlf))
             {
-                message = Encoding.UTF8.GetString(span);
+                request = Encoding.UTF8.GetString(span);
                 consumed = reader.Position;
                 return true;
             }
             else
             {
-                message = string.Empty;
+                request = string.Empty;
                 consumed = result.Buffer.Start;
                 return false;
             }
