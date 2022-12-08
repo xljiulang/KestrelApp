@@ -38,7 +38,7 @@ namespace KestrelApp.Middleware.Redis
         /// 处理redis请求
         /// </summary>
         /// <returns></returns>
-        public async Task ProcessRedisAsync()
+        public async Task ProcessRequestAsync()
         {
             var input = this.context.Transport.Input;
             while (this.context.ConnectionClosed.IsCancellationRequested == false)
@@ -61,8 +61,8 @@ namespace KestrelApp.Middleware.Redis
 
                 foreach (var cmd in cmds)
                 {
-                    var context = new RedisContext(this, cmd);
-                    await this.application(context);
+                    var redisContext = new RedisContext(this, cmd, this.context);
+                    await this.application.Invoke(redisContext);
                 }
 
                 if (result.IsCompleted)
@@ -81,7 +81,6 @@ namespace KestrelApp.Middleware.Redis
         {
             await this.context.Transport.Output.WriteAsync(response.ToMemory());
         }
-
 
         public void Close()
         {

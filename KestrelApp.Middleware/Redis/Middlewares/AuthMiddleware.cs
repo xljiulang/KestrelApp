@@ -31,7 +31,7 @@ namespace KestrelApp.Middleware.Redis.Middlewares
             {
                 await next(context);
             }
-            else if (context.Cmd.Name != RedisCmdName.Auth)
+            else if (context.Reqeust.Name != RedisCmdName.Auth)
             {
                 if (string.IsNullOrEmpty(options.CurrentValue.Auth))
                 {

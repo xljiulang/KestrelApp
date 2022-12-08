@@ -18,7 +18,7 @@ namespace KestrelApp.Middleware.Redis.Middlewares
 
         public Task InvokeAsync(ApplicationDelegate<RedisContext> next, RedisContext context)
         {
-            this.logger.LogWarning($"无法处理{context.Cmd}");
+            this.logger.LogWarning($"无法处理{context.Reqeust}");
             return context.Client.ResponseAsync(RedisResponse.Err);
         }
     }

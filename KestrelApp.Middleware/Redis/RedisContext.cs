@@ -1,9 +1,12 @@
-﻿namespace KestrelApp.Middleware.Redis
+﻿using KestrelFramework.Application;
+using Microsoft.AspNetCore.Connections;
+
+namespace KestrelApp.Middleware.Redis
 {
     /// <summary>
     /// 表示redis上下文
     /// </summary>
-    sealed class RedisContext
+    sealed class RedisContext : ApplicationContext
     {
         /// <summary>
         /// 获取redis客户端
@@ -13,22 +16,24 @@
         /// <summary>
         /// 获取redis命令
         /// </summary>
-        public RedisCmd Cmd { get; }
+        public RedisCmd Reqeust { get; }
 
         /// <summary>
         /// redis上下文
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="cmd"></param>
-        public RedisContext(RedisClient client, RedisCmd cmd)
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        public RedisContext(RedisClient client, RedisCmd request, ConnectionContext context)
+            : base(context.Features)
         {
-            Client = client;
-            Cmd = cmd;
+            this.Client = client;
+            this.Reqeust = request;
         }
 
         public override string ToString()
         {
-            return $"{this.Client} {this.Cmd}";
+            return $"{this.Client} {this.Reqeust}";
         }
     }
 }

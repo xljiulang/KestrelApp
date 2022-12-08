@@ -19,7 +19,7 @@ namespace KestrelApp.Middleware.Redis
         /// <returns></returns>
         public Task HandleAsync(RedisContext context)
         {
-            return this.HandleAsync(context.Client, context.Cmd);
+            return this.HandleAsync(context.Client, context.Reqeust);
         }
 
         /// <summary>

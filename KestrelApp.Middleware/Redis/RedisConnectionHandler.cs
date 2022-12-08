@@ -42,7 +42,7 @@ namespace KestrelApp.Middleware.Redis
             try
             {
                 var client = new RedisClient(context, this.application);
-                await client.ProcessRedisAsync();
+                await client.ProcessRequestAsync();
             }
             catch (Exception ex)
             {

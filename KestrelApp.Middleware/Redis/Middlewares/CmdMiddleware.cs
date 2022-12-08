@@ -19,7 +19,7 @@ namespace KestrelApp.Middleware.Redis.Middlewares
 
         public async Task InvokeAsync(ApplicationDelegate<RedisContext> next, RedisContext context)
         {
-            if (this.cmdHandlers.TryGetValue(context.Cmd.Name, out var hanler))
+            if (this.cmdHandlers.TryGetValue(context.Reqeust.Name, out var hanler))
             {
                 await hanler.HandleAsync(context);
             }
