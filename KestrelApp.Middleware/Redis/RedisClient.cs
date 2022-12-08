@@ -52,17 +52,16 @@ namespace KestrelApp.Middleware.Redis
                 var requests = RedisRequest.Parse(result.Buffer, out var consumed);
                 if (requests.Count > 0)
                 {
+                    foreach (var request in requests)
+                    {
+                        var redisContext = new RedisContext(this, request, this.context);
+                        await this.application.Invoke(redisContext);
+                    }
                     input.AdvanceTo(consumed);
                 }
                 else
                 {
                     input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
-                }
-
-                foreach (var request in requests)
-                {
-                    var redisContext = new RedisContext(this, request, this.context);
-                    await this.application.Invoke(redisContext);
                 }
 
                 if (result.IsCompleted)
