@@ -5,19 +5,18 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// select命令处理
     /// </summary>
-    sealed class SelectHandler : RedisCmdHandler
+    sealed class SelectHandler : IRedisCmdHanler
     {
-        public override RedisCmdName CmdName => RedisCmdName.Select;
-         
+        public RedisCmd Cmd => RedisCmd.Select;
+
         /// <summary>
-        /// 处理命令
+        /// 处理请求
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="cmd"></param>
+        /// <param name="context"></param> 
         /// <returns></returns>
-        protected override Task HandleAsync(RedisClient client, RedisCmd cmd)
+        public async ValueTask HandleAsync(RedisContext context)
         {
-            return client.ResponseAsync(RedisResponse.OK);
+            await context.Response.WriteAsync(ResponseContent.OK);
         }
     }
 }

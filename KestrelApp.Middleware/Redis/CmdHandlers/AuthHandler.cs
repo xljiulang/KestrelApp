@@ -9,11 +9,11 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Auth处理者
     /// </summary>
-    sealed class AuthHandler : RedisCmdHandler
+    sealed class AuthHandler : IRedisCmdHanler
     {
         private readonly IOptionsMonitor<RedisOptions> options;
 
-        public override RedisCmdName CmdName => RedisCmdName.Auth;
+        public RedisCmd Cmd => RedisCmd.Auth;
 
         /// <summary>
         /// Auth处理者
@@ -25,13 +25,13 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
         }
 
         /// <summary>
-        /// 处理命令
+        /// 处理请求
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="cmd"></param>
+        /// <param name="context"></param> 
         /// <returns></returns>
-        protected override async Task HandleAsync(RedisClient client, RedisCmd cmd)
+        public async ValueTask HandleAsync(RedisContext context)
         {
+            var client = context.Client;
             if (client.IsAuthed == null)
             {
                 var auth = this.options.CurrentValue.Auth;
@@ -39,20 +39,20 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
                 {
                     client.IsAuthed = true;
                 }
-                else if (cmd.ArgumentCount > 0)
+                else if (context.Reqeust.ArgumentCount > 0)
                 {
-                    var password = cmd.Argument(0).Value;
+                    var password = context.Reqeust.Argument(0).Value;
                     client.IsAuthed = password.Span.SequenceEqual(Encoding.UTF8.GetBytes(auth));
                 }
             }
 
             if (client.IsAuthed == true)
             {
-                await client.ResponseAsync(RedisResponse.OK);
+                await context.Response.WriteAsync(ResponseContent.OK);
             }
             else
             {
-                await client.ResponseAsync(RedisResponse.Err);
+                await context.Response.WriteAsync(ResponseContent.Err);
             }
         }
     }

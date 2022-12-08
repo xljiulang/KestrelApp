@@ -25,13 +25,13 @@ namespace KestrelApp.Middleware.Redis.Middlewares
         {
             if (context.Client.IsAuthed == false)
             {
-                await context.Client.ResponseAsync(RedisResponse.Err);
+                await context.Response.WriteAsync(ResponseContent.Err);
             }
             else if (context.Client.IsAuthed == true)
             {
                 await next(context);
             }
-            else if (context.Reqeust.Name != RedisCmdName.Auth)
+            else if (context.Reqeust.Cmd != RedisCmd.Auth)
             {
                 if (string.IsNullOrEmpty(options.CurrentValue.Auth))
                 {
@@ -41,7 +41,7 @@ namespace KestrelApp.Middleware.Redis.Middlewares
                 else
                 {
                     this.logger.LogWarning("需要客户端Auth");
-                    await context.Client.ResponseAsync(RedisResponse.Err);
+                    await context.Response.WriteAsync(ResponseContent.Err);
                 }
             }
             else

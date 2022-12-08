@@ -5,20 +5,19 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// 退出
     /// </summary>
-    sealed class QiuitHandler : RedisCmdHandler
+    sealed class QiuitHandler : IRedisCmdHanler
     {
-        public override RedisCmdName CmdName => RedisCmdName.Quit;
-         
+        public RedisCmd Cmd => RedisCmd.Quit;
+
         /// <summary>
-        /// 处理命令
+        /// 处理请求
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="cmd"></param>
+        /// <param name="context"></param> 
         /// <returns></returns>
-        protected override Task HandleAsync(RedisClient client, RedisCmd cmd)
+        public ValueTask HandleAsync(RedisContext context)
         {
-            client.Close();
-            return Task.CompletedTask;
+            context.Client.Close();
+            return ValueTask.CompletedTask;
         }
     }
 }

@@ -6,39 +6,27 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Echo处理者
     /// </summary>
-    sealed class EchoHandler : RedisCmdHandler
+    sealed class EchoHandler : IRedisCmdHanler
     {
-        public override RedisCmdName CmdName => RedisCmdName.Echo;
+        public RedisCmd Cmd => RedisCmd.Echo;
 
         /// <summary>
-        /// 处理命令
+        /// 处理请求
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="cmd"></param>
+        /// <param name="context"></param> 
         /// <returns></returns>
-        protected override async Task HandleAsync(RedisClient client, RedisCmd cmd)
+        public async ValueTask HandleAsync(RedisContext context)
         {
-            var echo = cmd.ArgumentCount > 0 ? cmd.Argument(0) : new RedisValue(Array.Empty<byte>());
-            var response = new EchoResponse(echo);
-            await client.ResponseAsync(response);
-        }
+            var echo = context.Reqeust.ArgumentCount > 0
+                ? context.Reqeust.Argument(0)
+                : new RedisValue(ReadOnlyMemory<byte>.Empty);
 
-        /// <summary>
-        /// 表示回声
-        /// </summary>
-        private class EchoResponse : RedisResponse
-        {
-            /// <summary>
-            /// 回声命令
-            /// </summary>
-            /// <param name="echo"></param>
-            public EchoResponse(RedisValue echo)
-            {
-                //$2
-                //xx 
-                this.Write('$').Write(echo.Value.Length.ToString()).WriteLine()
-                    .Write(echo.Value).WriteLine();
-            } 
+            //$2
+            //xx 
+            await context.Response
+                .Write('$').Write(echo.Value.Length.ToString()).WriteLine()
+                .Write(echo.Value).WriteLine()
+                .FlushAsync();
         }
     }
 }

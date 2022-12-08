@@ -1,31 +1,22 @@
 ﻿using System;
 using System.Buffers;
+using System.IO.Pipelines;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KestrelApp.Middleware.Redis
 {
     /// <summary>
     /// 表示redis回复
     /// </summary>
-    class RedisResponse : IRedisResponse
+    sealed class RedisResponse
     {
-        /// <summary>
-        /// OK
-        /// </summary>
-        public static IRedisResponse OK { get; } = new StringResponse("+OK\r\n");
+        private readonly PipeWriter writer;
 
-        /// <summary>
-        /// Error
-        /// </summary>
-        public static IRedisResponse Err { get; } = new StringResponse("-ERR\r\n");
-
-        /// <summary>
-        /// pong
-        /// </summary>
-        public static IRedisResponse Pong { get; } = new StringResponse("+PONG\r\n");
-
-
-        private readonly ArrayBufferWriter<byte> writer = new();
+        public RedisResponse(PipeWriter writer)
+        {
+            this.writer = writer;
+        }
 
         /// <summary>
         /// 写入\r\n
@@ -37,9 +28,9 @@ namespace KestrelApp.Middleware.Redis
             return this;
         }
 
-        public RedisResponse Write(ReadOnlyMemory<byte> value)
+        public RedisResponse Write(char value)
         {
-            this.writer.Write(value.Span);
+            this.writer.Write((byte)value);
             return this;
         }
 
@@ -49,37 +40,21 @@ namespace KestrelApp.Middleware.Redis
             return this;
         }
 
-        public RedisResponse Write(char value)
+        public RedisResponse Write(ReadOnlyMemory<byte> value)
         {
-            this.writer.Write((byte)value);
+            this.writer.Write(value.Span);
             return this;
         }
 
-        /// <summary>
-        /// 转换为Memory
-        /// </summary>
-        /// <returns></returns>
-        public ReadOnlyMemory<byte> ToMemory()
+
+        public ValueTask<FlushResult> FlushAsync()
         {
-            return this.writer.WrittenMemory;
+            return this.writer.FlushAsync();
         }
 
-        /// <summary>
-        /// 文本回复
-        /// </summary>
-        private class StringResponse : IRedisResponse
-        {
-            private readonly ReadOnlyMemory<byte> value;
-
-            public StringResponse(string value)
-            {
-                this.value = Encoding.UTF8.GetBytes(value);
-            }
-
-            public ReadOnlyMemory<byte> ToMemory()
-            {
-                return this.value;
-            }
+        public ValueTask<FlushResult> WriteAsync(ResponseContent content)
+        { 
+            return this.writer.WriteAsync(content.ToMemory());
         }
     }
 }

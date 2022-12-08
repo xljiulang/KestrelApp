@@ -5,20 +5,18 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Ping处理者
     /// </summary>
-    sealed class PingHandler : RedisCmdHandler
+    sealed class PingHandler : IRedisCmdHanler
     {
-        public override RedisCmdName CmdName => RedisCmdName.Ping;
-         
+        public RedisCmd Cmd => RedisCmd.Ping;
 
         /// <summary>
-        /// 处理ping
+        /// 处理请求
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="cmd"></param>
+        /// <param name="context"></param> 
         /// <returns></returns>
-        protected override Task HandleAsync(RedisClient client, RedisCmd cmd)
+        public async ValueTask HandleAsync(RedisContext context)
         {
-            return client.ResponseAsync(RedisResponse.Pong);
+            await context.Response.WriteAsync(ResponseContent.Pong);
         }
     }
 }

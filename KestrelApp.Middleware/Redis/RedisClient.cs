@@ -49,8 +49,8 @@ namespace KestrelApp.Middleware.Redis
                     break;
                 }
 
-                var cmds = RedisCmd.Parse(result.Buffer, out var consumed);
-                if (cmds.Count > 0)
+                var requests = RedisRequest.Parse(result.Buffer, out var consumed);
+                if (requests.Count > 0)
                 {
                     input.AdvanceTo(consumed);
                 }
@@ -59,9 +59,9 @@ namespace KestrelApp.Middleware.Redis
                     input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
                 }
 
-                foreach (var cmd in cmds)
+                foreach (var request in requests)
                 {
-                    var redisContext = new RedisContext(this, cmd, this.context);
+                    var redisContext = new RedisContext(this, request, this.context);
                     await this.application.Invoke(redisContext);
                 }
 
@@ -73,15 +73,8 @@ namespace KestrelApp.Middleware.Redis
         }
 
         /// <summary>
-        /// 回复信息
+        /// 关闭连接
         /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
-        public async Task ResponseAsync(IRedisResponse response)
-        {
-            await this.context.Transport.Output.WriteAsync(response.ToMemory());
-        }
-
         public void Close()
         {
             this.context.Abort();

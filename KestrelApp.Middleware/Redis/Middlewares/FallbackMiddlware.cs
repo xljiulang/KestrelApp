@@ -16,10 +16,10 @@ namespace KestrelApp.Middleware.Redis.Middlewares
             this.logger = logger;
         }
 
-        public Task InvokeAsync(ApplicationDelegate<RedisContext> next, RedisContext context)
+        public async Task InvokeAsync(ApplicationDelegate<RedisContext> next, RedisContext context)
         {
             this.logger.LogWarning($"无法处理{context.Reqeust}");
-            return context.Client.ResponseAsync(RedisResponse.Err);
+            await context.Response.WriteAsync(ResponseContent.Err);
         }
     }
 }

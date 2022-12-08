@@ -14,9 +14,14 @@ namespace KestrelApp.Middleware.Redis
         public RedisClient Client { get; }
 
         /// <summary>
-        /// 获取redis命令
+        /// 获取redis请求
         /// </summary>
-        public RedisCmd Reqeust { get; }
+        public RedisRequest Reqeust { get; }
+
+        /// <summary>
+        /// 获取redis响应
+        /// </summary>
+        public RedisResponse Response { get; }
 
         /// <summary>
         /// redis上下文
@@ -24,11 +29,12 @@ namespace KestrelApp.Middleware.Redis
         /// <param name="client"></param>
         /// <param name="request"></param>
         /// <param name="context"></param>
-        public RedisContext(RedisClient client, RedisCmd request, ConnectionContext context)
+        public RedisContext(RedisClient client, RedisRequest request, ConnectionContext context)
             : base(context.Features)
         {
             this.Client = client;
             this.Reqeust = request;
+            this.Response = new RedisResponse(context.Transport.Output);
         }
 
         public override string ToString()

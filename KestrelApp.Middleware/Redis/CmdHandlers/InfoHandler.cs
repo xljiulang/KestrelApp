@@ -5,32 +5,25 @@ namespace KestrelApp.Middleware.Redis.CmdHandlers
     /// <summary>
     /// Info处理者
     /// </summary>
-    sealed class InfoHandler : RedisCmdHandler
+    sealed class InfoHandler : IRedisCmdHanler
     {
-        public override RedisCmdName CmdName => RedisCmdName.Info;
+        public RedisCmd Cmd => RedisCmd.Info;
 
         /// <summary>
-        /// 处理命令
+        /// 处理请求
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="cmd"></param>
+        /// <param name="context"></param> 
         /// <returns></returns>
-        protected override async Task HandleAsync(RedisClient client, RedisCmd cmd)
+        public async ValueTask HandleAsync(RedisContext context)
         {
-            var response = new InfoResponse("redis_version: 9.9.9");
-            await client.ResponseAsync(response);
-        }
+            //$935
+            //redis_version: 2.4.6
 
-        private class InfoResponse : RedisResponse
-        {
-            public InfoResponse(string info)
-            {
-                //$935
-                //redis_version: 2.4.6
-
-                this.Write('$').Write(info.Length.ToString()).WriteLine()
-                    .Write(info).WriteLine();
-            }
+            const string info = "redis_version: 9.9.9";
+            await context.Response
+                .Write('$').Write(info.Length.ToString()).WriteLine()
+                .Write(info).WriteLine()
+                .FlushAsync();
         }
     }
 }

@@ -3,20 +3,20 @@
 namespace KestrelApp.Middleware.Redis
 {
     /// <summary>
-    /// 定义redis命令处理者
+    /// 定义redis请求处理者
     /// </summary>
     interface IRedisCmdHanler
     {
         /// <summary>
-        /// 获取能处理的cmd名称
+        /// 获取能处理的请求命令
         /// </summary>
-        RedisCmdName CmdName { get; }
+        RedisCmd Cmd { get; }
 
         /// <summary>
-        /// 处理
+        /// 处理请求
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        Task HandleAsync(RedisContext context);
+        ValueTask HandleAsync(RedisContext context);
     }
 }
