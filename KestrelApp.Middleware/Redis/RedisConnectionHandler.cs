@@ -41,8 +41,7 @@ namespace KestrelApp.Middleware.Redis
         {
             try
             {
-                var client = new RedisClient(context, this.application);
-                await client.ProcessRequestAsync();
+                await this.HandleRequestsAsync(context);
             }
             catch (Exception ex)
             {
@@ -53,5 +52,47 @@ namespace KestrelApp.Middleware.Redis
                 await context.DisposeAsync();
             }
         }
+
+        /// <summary>
+        /// 处理redis请求
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private async Task HandleRequestsAsync(ConnectionContext context)
+        {
+            var input = context.Transport.Input;
+            var client = new RedisClient(context);
+            var response = new RedisResponse(context.Transport.Output);
+
+            while (context.ConnectionClosed.IsCancellationRequested == false)
+            {
+                var result = await input.ReadAsync();
+                if (result.IsCanceled)
+                {
+                    break;
+                }
+
+                var requests = RedisRequest.Parse(result.Buffer, out var consumed);
+                if (requests.Count > 0)
+                {
+                    foreach (var request in requests)
+                    {
+                        var redisContext = new RedisContext(client, request, response, context.Features);
+                        await this.application.Invoke(redisContext);
+                    }
+                    input.AdvanceTo(consumed);
+                }
+                else
+                {
+                    input.AdvanceTo(result.Buffer.Start, result.Buffer.End);
+                }
+
+                if (result.IsCompleted)
+                {
+                    break;
+                }
+            }
+        }
+
     }
 }

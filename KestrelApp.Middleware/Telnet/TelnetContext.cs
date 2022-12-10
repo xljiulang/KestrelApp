@@ -11,12 +11,12 @@ namespace KestrelApp.Middleware.Telnet
 
         public TelnetResponse Response { get; }
 
-        public TelnetContext(string request, ConnectionContext context)
+        public TelnetContext(string request, TelnetResponse response, ConnectionContext context)
             : base(context.Features)
         {
             this.context = context;
             this.Request = request;
-            this.Response = this.Features.Get<TelnetResponse>()!;
+            this.Response = response;
         }
 
         public void Abort()

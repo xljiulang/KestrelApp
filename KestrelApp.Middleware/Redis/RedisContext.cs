@@ -1,5 +1,5 @@
 ﻿using KestrelFramework.Application;
-using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace KestrelApp.Middleware.Redis
 {
@@ -28,13 +28,14 @@ namespace KestrelApp.Middleware.Redis
         /// </summary>
         /// <param name="client"></param>
         /// <param name="request"></param>
-        /// <param name="context"></param>
-        public RedisContext(RedisClient client, RedisRequest request, ConnectionContext context)
-            : base(context.Features)
+        /// <param name="response"></param>
+        /// <param name="features"></param> 
+        public RedisContext(RedisClient client, RedisRequest request, RedisResponse response, IFeatureCollection features)
+            : base(features)
         {
             this.Client = client;
             this.Reqeust = request;
-            this.Response = new RedisResponse(context.Transport.Output);
+            this.Response = response;
         }
 
         public override string ToString()

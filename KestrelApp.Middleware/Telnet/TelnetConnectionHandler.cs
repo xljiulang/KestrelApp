@@ -43,12 +43,9 @@ namespace KestrelApp.Middleware.Telnet
             var output = context.Transport.Output;
 
             var response = new TelnetResponse(output);
-            context.Features.Set(response);
-
             response.WriteLine($"Welcome to {Dns.GetHostName()} !");
             response.WriteLine($"It is {DateTime.Now} now !");
             await response.FlushAsync();
-
 
             while (context.ConnectionClosed.IsCancellationRequested == false)
             {
@@ -62,7 +59,7 @@ namespace KestrelApp.Middleware.Telnet
                 {
                     input.AdvanceTo(consumed);
 
-                    var telnetContext = new TelnetContext(request, context);
+                    var telnetContext = new TelnetContext(request, response, context);
                     await this.application.Invoke(telnetContext);
                 }
                 else
