@@ -10,7 +10,7 @@ namespace KestrelApp.Middleware.Redis
     /// <summary>
     /// 表示Redis连接处理者
     /// </summary>
-    sealed class RedisConnectionHandler : ConnectionHandler
+    public sealed class RedisConnectionHandler : ConnectionHandler
     {
         private readonly ILogger<RedisConnectionHandler> logger;
         private readonly ApplicationDelegate<RedisContext> application;

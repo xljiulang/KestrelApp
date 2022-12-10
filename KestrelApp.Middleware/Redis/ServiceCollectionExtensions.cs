@@ -39,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.TryAddEnumerable(descriptor);
             }
 
+            services.TryAddSingleton<RedisConnectionHandler>();
             return services;
         }
     }
