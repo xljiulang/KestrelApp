@@ -11,7 +11,9 @@ namespace KestrelApp.Fiddler
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddFiddler();
+            builder.Services
+                .AddFiddler()
+                .AddControllers();
 
             builder.Host.UseSerilog((hosting, logger) =>
             {
@@ -29,6 +31,11 @@ namespace KestrelApp.Fiddler
             var app = builder.Build();
             app.UseRouting();
             app.UseFiddler();
+
+            app.MapControllerRoute(
+               name: "default",
+               pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.Run();
         }
     }

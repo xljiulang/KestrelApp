@@ -1,4 +1,4 @@
-﻿namespace KestrelApp.Fiddler.Kestrel
+﻿namespace KestrelApp.Fiddler.Middlewares
 {
     /// <summary>
     /// 代理协议

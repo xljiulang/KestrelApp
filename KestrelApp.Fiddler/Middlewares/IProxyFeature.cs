@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace KestrelApp.Fiddler.Kestrel
+namespace KestrelApp.Fiddler.Middlewares
 {
     /// <summary>
     /// 代理Feature

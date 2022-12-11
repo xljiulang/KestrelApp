@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace KestrelApp.Fiddler.Http
+namespace KestrelApp.Fiddler.Middlewares
 {
     /// <summary>
     /// http分析中间件
@@ -27,12 +27,19 @@ namespace KestrelApp.Fiddler.Http
         }
 
         /// <summary>
-        /// 处理http代理
+        /// 分析代理的http流量
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         public async Task InvokeAsync(HttpContext context)
         {
+            var feature = context.Features.Get<IProxyFeature>();
+            if (feature == null || feature.ProxyProtocol == ProxyProtocol.None)
+            {
+                await next(context);
+                return;
+            }
+
             context.Request.EnableBuffering();
             var oldBody = context.Response.Body;
             using var newBody = new FileBufferingWriteStream();

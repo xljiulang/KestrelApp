@@ -1,5 +1,5 @@
 ﻿using KestrelApp.Fiddler.Certs;
-using KestrelApp.Fiddler.Kestrel;
+using KestrelApp.Fiddler.Middlewares;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +29,8 @@ namespace Microsoft.AspNetCore.Hosting
                 tls.ServerCertificateSelector = (context, domain) => certService.GetOrCreateServerCert(domain);
             });
 
-            // 隧道代理http(s)处理中间件
-            listen.Use<TunnelHttpMiddleware>();
+            // 隧道代理处理中间件
+            listen.Use<TunnelMiddleware>();
             return listen;
         }
     }

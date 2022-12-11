@@ -8,7 +8,7 @@ using System.IO.Pipelines;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KestrelApp.Fiddler.Kestrel
+namespace KestrelApp.Fiddler.Middlewares
 {
     /// <summary>
     /// 代理中间件
@@ -84,7 +84,7 @@ namespace KestrelApp.Fiddler.Kestrel
         /// <param name="request"></param>
         /// <param name="consumed"></param>
         /// <returns></returns>
-        private bool ParseRequest(ReadResult result, HttpRequestHandler request, out SequencePosition consumed)
+        private static bool ParseRequest(ReadResult result, HttpRequestHandler request, out SequencePosition consumed)
         {
             var reader = new SequenceReader<byte>(result.Buffer);
             if (httpParser.ParseRequestLine(request, ref reader) &&
@@ -143,7 +143,6 @@ namespace KestrelApp.Fiddler.Kestrel
             void IHttpHeadersHandler.OnHeader(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value)
             {
             }
-
             void IHttpHeadersHandler.OnHeadersComplete(bool endStream)
             {
             }

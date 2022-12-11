@@ -1,12 +1,10 @@
-﻿using KestrelApp.Fiddler.Kestrel;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Yarp.ReverseProxy.Forwarder;
 
-namespace KestrelApp.Fiddler.Http
+namespace KestrelApp.Fiddler.Middlewares
 {
     /// <summary>
     /// http代理执行中间件
@@ -15,7 +13,6 @@ namespace KestrelApp.Fiddler.Http
     {
         private readonly RequestDelegate next;
         private readonly IHttpForwarder httpForwarder;
-        private readonly ILogger<HttpProxyMiddleware> logger;
         private readonly HttpMessageInvoker httpClient = new(CreateSocketsHttpHandler());
 
         /// <summary>
@@ -23,15 +20,12 @@ namespace KestrelApp.Fiddler.Http
         /// </summary>
         /// <param name="next"></param>
         /// <param name="httpForwarder"></param>
-        /// <param name="logger"></param>
         public HttpProxyMiddleware(
             RequestDelegate next,
-            IHttpForwarder httpForwarder,
-            ILogger<HttpProxyMiddleware> logger)
+            IHttpForwarder httpForwarder)
         {
             this.next = next;
             this.httpForwarder = httpForwarder;
-            this.logger = logger;
         }
 
         /// <summary>
