@@ -22,6 +22,8 @@ namespace KestrelApp.Fiddler.HttpAnalyzers
 
             writer.WriteLine("[REQUEST]");
             await context.SerializeRequestAsync(writer);
+
+            writer.WriteLine();
             writer.WriteLine("[RESPONSE]");
             await context.SerializeResponseAsync(writer);
 
