@@ -47,7 +47,7 @@ namespace KestrelApp.Fiddler.Middlewares
 
             try
             {
-                // 替换respone的body
+                // 替换response的body
                 context.Response.Body = response.Body;
 
                 // 请求下个中间件
