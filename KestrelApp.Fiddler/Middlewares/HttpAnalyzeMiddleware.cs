@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace KestrelApp.Fiddler.Middlewares
@@ -42,34 +43,53 @@ namespace KestrelApp.Fiddler.Middlewares
 
             context.Request.EnableBuffering();
             var oldBody = context.Response.Body;
-            using var newBody = new FileBufferingWriteStream();
+            using var response = new FileResponse();
+
             try
             {
                 // 替换respone的body
-                context.Response.Body = newBody;
+                context.Response.Body = response.Body;
 
                 // 请求下个中间件
                 await next(context);
 
                 // 处理分析
-                await this.AnalyzeAsync(context.Request, context.Response, newBody);
-
-                // 处理响应
-                await newBody.DrainBufferAsync(oldBody);
+                await this.AnalyzeAsync(context);
             }
             finally
             {
-                // 恢复body
+                response.Body.Position = 0L;
+                await response.Body.CopyToAsync(oldBody);
                 context.Response.Body = oldBody;
             }
         }
 
-        private async ValueTask AnalyzeAsync(HttpRequest request, HttpResponse response, FileBufferingWriteStream responseBody)
+        private async ValueTask AnalyzeAsync(HttpContext context)
         {
             foreach (var item in this.analyzers)
             {
-                request.Body.Position = 0L;
-                await item.AnalyzeAsync(request, response, responseBody);
+                context.Request.Body.Position = 0L;
+                context.Response.Body.Position = 0L;
+                await item.AnalyzeAsync(context);
+            }
+        }
+
+
+        private class FileResponse : IDisposable
+        {
+            private readonly string filePath = Path.GetTempFileName();
+
+            public Stream Body { get; }
+
+            public FileResponse()
+            {
+                this.Body = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite);
+            }
+
+            public void Dispose()
+            {
+                this.Body.Dispose();
+                File.Delete(filePath);
             }
         }
     }
