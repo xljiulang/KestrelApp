@@ -16,15 +16,15 @@ namespace KestrelApp.Fiddler.Middlewares
     /// <summary>
     /// 隧道传输中间件
     /// </summary>
-    sealed class TunnelMiddleware : IKestrelMiddleware
+    sealed class KestrelTunnelMiddleware : IKestrelMiddleware
     {
-        private readonly ILogger<TunnelMiddleware> logger;
+        private readonly ILogger<KestrelTunnelMiddleware> logger;
 
         /// <summary>
         /// 隧道传输中间件
         /// </summary>
         /// <param name="logger"></param>
-        public TunnelMiddleware(ILogger<TunnelMiddleware> logger)
+        public KestrelTunnelMiddleware(ILogger<KestrelTunnelMiddleware> logger)
         {
             this.logger = logger;
         }

@@ -18,7 +18,7 @@ namespace Microsoft.AspNetCore.Hosting
         public static ListenOptions UseFiddler(this ListenOptions listen)
         {
             // 代理协议中间件
-            listen.Use<ProxyMiddleware>();
+            listen.Use<KestrelProxyMiddleware>();
 
             // tls侦测中间件
             listen.UseTlsDetection(tls =>
@@ -30,7 +30,7 @@ namespace Microsoft.AspNetCore.Hosting
             });
 
             // 隧道代理处理中间件
-            listen.Use<TunnelMiddleware>();
+            listen.Use<KestrelTunnelMiddleware>();
             return listen;
         }
     }

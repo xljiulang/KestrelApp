@@ -13,7 +13,7 @@ namespace KestrelApp.Fiddler.Middlewares
     /// <summary>
     /// 代理中间件
     /// </summary>
-    sealed class ProxyMiddleware : IKestrelMiddleware
+    sealed class KestrelProxyMiddleware : IKestrelMiddleware
     {
         private static readonly HttpParser<HttpRequestHandler> httpParser = new();
         private static readonly byte[] http200 = Encoding.ASCII.GetBytes("HTTP/1.1 200 Connection Established\r\n\r\n");
