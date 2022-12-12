@@ -12,7 +12,7 @@ namespace Microsoft.AspNetCore.Hosting
     public static partial class ListenOptionsExtensions
     {
         /// <summary>
-        /// 使用Fiddler
+        /// 使用Fiddler的kestrel中间件
         /// </summary>
         /// <param name="listen"></param>
         public static ListenOptions UseFiddler(this ListenOptions listen)

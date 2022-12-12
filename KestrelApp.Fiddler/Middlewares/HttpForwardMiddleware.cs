@@ -9,7 +9,7 @@ namespace KestrelApp.Fiddler.Middlewares
     /// <summary>
     /// http代理执行中间件
     /// </summary>
-    sealed class HttpProxyMiddleware
+    sealed class HttpForwardMiddleware
     {
         private readonly RequestDelegate next;
         private readonly IHttpForwarder httpForwarder;
@@ -20,7 +20,7 @@ namespace KestrelApp.Fiddler.Middlewares
         /// </summary>
         /// <param name="next"></param>
         /// <param name="httpForwarder"></param>
-        public HttpProxyMiddleware(
+        public HttpForwardMiddleware(
             RequestDelegate next,
             IHttpForwarder httpForwarder)
         {

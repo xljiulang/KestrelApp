@@ -12,24 +12,20 @@ namespace Microsoft.Extensions.DependencyInjection
     public static partial class ServiceCollectionExtensions
     {
         /// <summary>
-        /// 添加Fiddler
+        /// 添加Fiddler依赖项
         /// </summary>
         /// <param name="services"></param> 
         /// <returns></returns>
         public static IServiceCollection AddFiddler(this IServiceCollection services)
         {
-            var descriptor = ServiceDescriptor.Singleton<IHttpAnalyzer, LoggingHttpAnalyzer>();
-            services.TryAddEnumerable(descriptor);
+            services.TryAddSingleton<CertService>();
+            services.AddSingleton<ICaCertInstaller, CaCertInstallerOfMacOS>();
+            services.AddSingleton<ICaCertInstaller, CaCertInstallerOfWindows>();
+            services.AddSingleton<ICaCertInstaller, CaCertInstallerOfLinuxRedHat>();
+            services.AddSingleton<ICaCertInstaller, CaCertInstallerOfLinuxDebian>();
 
-            services
-                .AddMemoryCache()
-                .AddSingleton<CertService>()
-                .AddSingleton<ICaCertInstaller, CaCertInstallerOfMacOS>()
-                .AddSingleton<ICaCertInstaller, CaCertInstallerOfWindows>()
-                .AddSingleton<ICaCertInstaller, CaCertInstallerOfLinuxRedHat>()
-                .AddSingleton<ICaCertInstaller, CaCertInstallerOfLinuxDebian>();
-
-            return services.AddHttpForwarder();
+            services.TryAddSingleton<IHttpAnalyzer, LoggingHttpAnalyzer>();
+            return services.AddMemoryCache().AddHttpForwarder();
         }
     }
 }
