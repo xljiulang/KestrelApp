@@ -23,8 +23,9 @@ namespace KestrelApp.Fiddler
         /// </summary>
         /// <param name="context"></param>
         /// <param name="writer"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async ValueTask SerializeRequestAsync(this HttpContext context, TextWriter writer)
+        public static async ValueTask SerializeRequestAsync(this HttpContext context, TextWriter writer, CancellationToken cancellationToken = default)
         {
             var request = context.Request;
             await writer.WriteLineAsync($"{request.Method} {request.GetEncodedPathAndQuery()} {request.Protocol}");
@@ -34,8 +35,13 @@ namespace KestrelApp.Fiddler
                 await writer.WriteLineAsync($"{header.Key}:{header.Value}");
             }
 
-            var reader = new HttpStreamReader(request.Body, request.ContentType);
-            await reader.ReadAsync(writer);
+            var stream = request.Body;
+            if (stream.Length > 0)
+            {
+                await writer.WriteLineAsync();
+                var reader = new HttpStreamReader(stream, request.ContentType);
+                await reader.ReadAsync(writer, cancellationToken);
+            }
         }
 
         /// <summary>
@@ -43,8 +49,9 @@ namespace KestrelApp.Fiddler
         /// </summary>
         /// <param name="context"></param>
         /// <param name="writer"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async ValueTask SerializeResponseAsync(this HttpContext context, TextWriter writer)
+        public static async ValueTask SerializeResponseAsync(this HttpContext context, TextWriter writer, CancellationToken cancellationToken = default)
         {
             var response = context.Response;
             var reason = context.Features.Get<IHttpResponseFeature>()?.ReasonPhrase;
@@ -60,13 +67,18 @@ namespace KestrelApp.Fiddler
             }
 
             var stream = response.Body;
-            if (DecompressionProvider.TryGet(response.Headers, out var provider))
+            if (stream.Length > 0)
             {
-                stream = provider(stream);
-            }
+                await writer.WriteLineAsync();
 
-            var reader = new HttpStreamReader(stream, response.ContentType);
-            await reader.ReadAsync(writer);
+                if (DecompressionProvider.TryGet(response.Headers, out var provider))
+                {
+                    stream = provider(stream);
+                }
+
+                var reader = new HttpStreamReader(stream, response.ContentType);
+                await reader.ReadAsync(writer, cancellationToken);
+            }
         }
 
 
@@ -113,18 +125,18 @@ namespace KestrelApp.Fiddler
             public async ValueTask ReadAsync(TextWriter writer, CancellationToken cancellationToken = default)
             {
                 using var owner = ArrayPool<char>.Shared.RentArrayOwner(8 * 1024);
+                var memory = owner.AsMemory();
 
                 while (true)
                 {
-                    var memory = owner.AsMemory();
                     var length = await base.ReadAsync(memory, cancellationToken);
                     if (length == 0)
                     {
                         break;
                     }
 
-                    var data = memory.Slice(0, length);
-                    await writer.WriteAsync(data, cancellationToken);
+                    var buffer = memory[..length];
+                    await writer.WriteAsync(buffer, cancellationToken);
                 }
             }
 
